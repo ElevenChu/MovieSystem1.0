@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>后台登录系统</title>
+    <script src="/js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <style type="text/css">
+        #form {
+            width: 300px;
+            height: 230px;
+            position: relative;
+            left: 50%;
+            top: 0%;
+            margin-left: -155px;
+            margin-top: 300px;
+        }
+
+        #background {
+            background-color: rgba(255, 255, 255, 0.5);
+            width: 400px;
+            height: 180px;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        label {
+            line-height: 35px;
+        }
+
+    </style>
+    <script type="text/javascript">
+     function admin_login() {
+       var data=$("#loginForm").serialize();
+         $.post("/admin_login",data,function (result) {
+            if (result.code==200){
+                alert(result.msg);
+            }else{
+                alert(result.msg);
+            }
+         },"json")
+
+     }
+     //看不清
+     function changeImage() {
+         $("#codeImage").prop("src","/admin_createImage?time="+new Date());
+     }
+    </script>
+</head>
+
+<body style="background: url(/img/0.jpg); background-size:100%; background-repeat:repeat-x; background-repeat:repeat-y;">
+<form id="loginForm">
+<div class="container" id="form">
+    <div id="background">
+        <div class="form-group">
+            <label for="firstname" class="col-sm-3 control-label">用户名</label>
+            <div class="">
+                <input type="text" class="form-control" name="account" style="display: inherit;width: 230px;" id="firstname" placeholder="请输入用户名">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="lastname" class="col-sm-3 control-label" >密码</label>
+            <div class="">
+                <input type="password" class="form-control" name="admin_pwd" style="display: inherit;width: 230px;" id="lastname" placeholder="请输入密码">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="lastname" class="col-sm-3 control-label">验证码</label>
+            <div class="">
+                <input type="text" class="form-control" name="userCode" style="display: inherit;width: 130px;" id="code" placeholder="请输入验证码">
+            </div>
+            <img src="/admin_createImage" id="codeImage"/> <a href="javascript:changeImage();">看不清</a>
+        </div>
+        <div class="form-group">
+            <div class="text-center ">
+                <button type="button" class="btn btn-default" onclick="admin_login()">登录</button>
+                <button type="reset" class="btn btn-default">重置</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</form>
+</body>
+
+</html>

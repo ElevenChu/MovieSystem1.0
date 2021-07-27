@@ -1,0 +1,61 @@
+#tou {
+	margin-top: 10px;
+}
+
+#ul a {
+	line-height: 10px;
+}
+
+#but1 {
+	color: #515151;
+	position: absolute;
+	right: 10%;
+	top: 25%;
+}
+
+#time {
+	color: white;
+	position: absolute;
+	width: 200px;
+	left: 100%;
+	top: 25%;
+}
+
+#search {
+	border: none;
+	padding: 9px 41px 9px 20px;
+	font-size: 14px;
+	background: #383838;
+	color: #A9A8A8;
+	-webkit-appearance: none;
+	outline: none;
+	width: 100%;
+	border-radius: 30px;
+}
+
+.detailed {
+	background: white;
+	border-radius: 20px;
+	padding-bottom: 50px;
+}
+
+#but1 {
+	color: #515151;
+	position: absolute;
+	cursor: pointer
+	right: 10%;
+	top: 25%;
+}
+
+#but1:hover {
+	
+	color: #EB9316;
+}
+
+#islog:hover {
+	cursor: pointer
+}
+
+#register table tr {
+	height: 50px;
+}

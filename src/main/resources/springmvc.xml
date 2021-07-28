@@ -15,7 +15,7 @@
         <!--模板页面以什么结尾-->
         <property name="suffix" value=".html" />
         <!--模板的语法检测-->
-        <property name="templateMode" value="LEGACYHTML5" />
+        <property name="templateMode" value="HTML5" />
         <!--模板页面是否有缓存 false-->
         <property name="cacheable" value="false" />
         <!--编码格式-->

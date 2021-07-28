@@ -39,7 +39,7 @@
        var data=$("#loginForm").serialize();
          $.post("/admin_login",data,function (result) {
             if (result.code==200){
-                alert(result.msg);
+                location.href="/page_admin_index";
             }else{
                 alert(result.msg);
             }

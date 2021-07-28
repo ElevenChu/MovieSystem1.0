@@ -159,9 +159,12 @@
       <artifactId>thymeleaf-spring4</artifactId>
       <version>3.0.9.RELEASE</version>
     </dependency>
-
-
-
+    <!-- 解决thymeleaf模板严格要求格式 -->
+    <dependency>
+      <groupId>net.sourceforge.nekohtml</groupId>
+      <artifactId>nekohtml</artifactId>
+      <version>1.9.22</version>
+    </dependency>
 
   </dependencies>
 

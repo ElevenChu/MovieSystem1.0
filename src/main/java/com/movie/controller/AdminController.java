@@ -25,7 +25,9 @@ public class AdminController {
         String safeCode = (String) session.getAttribute("safeCode");
         if (userCode.equalsIgnoreCase(safeCode)){
             Admin loginAdmin = adminService.login(admin);
-            if (loginAdmin==null){
+            if (loginAdmin!=null){
+                //存储session
+                session.setAttribute("loginAdmin",loginAdmin);
                 result=new CommonResult(200,"登陆成功");
 
             }else{
@@ -37,4 +39,13 @@ public class AdminController {
 
         return result;
     }
+
+    @ResponseBody//将返回值自动转为JSON格式
+    @RequestMapping(value = "/admin_logout",method = RequestMethod.POST)
+    public CommonResult logout(HttpSession session){
+        session.invalidate();
+        CommonResult result=new CommonResult(200,"注销成功");
+        return result;
+    }
+
 }

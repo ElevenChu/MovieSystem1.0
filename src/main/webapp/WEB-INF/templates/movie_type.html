@@ -89,7 +89,7 @@
         //跳转 更新
         function toupdate(category_id) {
             $.getJSON("/filmCategory_toupdate","category_id="+category_id,function (result) {
-                //alert(JSON.stringify(data));
+               // alert(JSON.stringify(data));
                 //回显更新框
                 $("#category_id").val(result.category_id);
                 $("#film_category").val(result.film_category);

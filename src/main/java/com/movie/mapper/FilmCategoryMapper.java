@@ -12,4 +12,5 @@ public interface FilmCategoryMapper {
     int addFilmCategory(FilmCategory filmCategory);
     int updateFilmCategory(FilmCategory filmCategory);
     int deleteFilmCategory(Integer category_id);
+    List<FilmCategory> getAllFilmCategorys();
 }

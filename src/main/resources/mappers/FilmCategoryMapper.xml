@@ -3,23 +3,33 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.movie.mapper.FilmCategoryMapper">
-    <select id="totalCount"  resultType="int">
+
+    <select id="totalCount" resultType="int">
         select count(*) from film_category where is_delete=1
     </select>
-    <select id="getFilmCategorys"  resultType="FilmCategory">
+
+    <select id="getFilmCategorys" resultType="FilmCategory">
         select * from film_category where is_delete=1 order by category_id desc
         limit #{startPage},#{pageSize}
     </select>
-    <select id="findById"  resultType="int">
-        select * from film_category where  category_id=#{category_id}
+
+    <select id="findById" resultType="FilmCategory">
+        select * from film_category where category_id=#{category_id}
     </select>
+
     <insert id="addFilmCategory">
-    insert into film_category values(null,#{film_category},1)
+        insert  into film_category values (null,#{film_category},1)
     </insert>
+
     <update id="updateFilmCategory">
-    update film_category set film_category=#{film_category} where category_id=#{category_id}
-   </update>
+        update film_category set film_category=#{film_category} where category_id=#{category_id}
+    </update>
+
     <update id="deleteFilmCategory">
         update film_category set is_delete=0 where category_id=#{category_id}
     </update>
+    <select id="getAllFilmCategorys" resultType="FilmCategory">
+        select * from film_category where is_delete=1
+    </select>
+
 </mapper>

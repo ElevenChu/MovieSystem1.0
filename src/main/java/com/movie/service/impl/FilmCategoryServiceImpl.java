@@ -9,10 +9,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @BelongsProject: MovieSystem
+ * @BelongsPackage: com.movie.service.impl
+ * @CreateTime: 2020-10-15 11:20
+ * @Description: TODO
+ */
 @Service
 public class FilmCategoryServiceImpl implements FilmCategoryService {
+
     @Autowired
-    private FilmCategoryMapper filmCategoryMapper;
+    FilmCategoryMapper filmCategoryMapper;
+
     @Override
     public int totalCount() {
         return filmCategoryMapper.totalCount();
@@ -35,11 +43,16 @@ public class FilmCategoryServiceImpl implements FilmCategoryService {
 
     @Override
     public int updateFilmCategory(FilmCategory filmCategory) {
-        return updateFilmCategory(filmCategory);
+        return filmCategoryMapper.updateFilmCategory(filmCategory);
     }
 
     @Override
     public int deleteFilmCategory(Integer category_id) {
         return filmCategoryMapper.deleteFilmCategory(category_id);
+    }
+
+    @Override
+    public List<FilmCategory> getAllFilmCategorys() {
+        return filmCategoryMapper.getAllFilmCategorys();
     }
 }

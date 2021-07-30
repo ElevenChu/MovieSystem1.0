@@ -1,0 +1,287 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="../js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/npm.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"/>
+    <script src="../js/3.3.7bootstrap.min.js"></script>
+    <style type="text/css">
+        .container {
+            margin-top: 30px;
+            border: 1px solid #b3a6a6;
+            border-radius: 10px;
+        }
+
+        .tou {
+            background: whitesmoke;
+            height: 30px;
+            line-height: 30px;
+            text-indent: 2em;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            border-bottom: 1px solid #b3a6a6;
+        }
+
+        table {
+            text-align: center;
+            margin-top: 10px;
+            border-top: 1px solid #b3a6a6;
+        }
+
+        table th {
+            text-align: center;
+        }
+
+        button span {
+            color: red;
+        }
+
+        label {
+            line-height: 35px;
+        }
+
+        .form-group {
+            margin-left: 100px;
+        }
+    </style>
+
+    <!--引入LayUI样式-->
+    <link rel="stylesheet" href="../js/layui/css/layui.css">
+    <!--引入LayUI的JS-->
+    <script src="../js/layui/layui.js"></script>
+
+</head>
+
+<body>
+<div class="container" style="padding: 0px;width: 80%">
+    <div class="tou"><span class="glyphicon glyphicon-align-justify"></span><span
+            style="font-weight: bold; margin-left: 6px;">操作信息管理</span></div>
+    <table class="table">
+        <caption><span id="sum" style="margin-left: 30px;">共12条</span></caption>
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>电影名称</th>
+            <th>电影类型</th>
+            <th>导演</th>
+            <th>编剧</th>
+            <th>主演</th>
+            <th>首映时间</th>
+            <th>片长</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="table">
+
+        <tr th:each="filmvo:${pageUtil.records}">
+            <td id="filmId1" th:text="${filmvo.film_id}">1</td>
+            <td id="filmName1" th:text="${filmvo.film_name}">南方车站的聚会</td>
+            <td id="filmCategory1" th:text="${filmvo.film_category}">爱情</td>
+            <td id="director1" th:text="${filmvo.director}">刁亦男</td>
+            <td id="screenwriters1" th:text="${filmvo.screenwriter_name}">刁亦男</td>
+            <td id="star1" th:text="${filmvo.performer_name}">甄子丹</td>
+            <td id="filmTime1" th:text="${filmvo.film_time}">2019-12-20</td>
+            <td id="playTime1" th:text="${filmvo.play_time}">113分钟</td>
+            <td>
+                <button th:if="${filmvo.is_delete==1}" id="but6" type="button" class="btn btn-default"
+                        style="border:1px solid red;background-color: yellow">
+                    <span>下架</span>
+                </button>
+                <button th:if="${filmvo.is_delete==0}" id="but6" type="button" class="btn btn-default"
+                        style="border:1px solid red;">
+                    <span>上架</span>
+                </button>
+            </td>
+        </tr>
+
+
+        </tbody>
+    </table>
+    <!--分页-->
+    <div id="fenye" class="panel-footer" style="text-align: center;">
+        <nav style="height: 35px;">
+            <ul class="pagination" style="margin-top:0px;">
+                <li id="Previous" th:if="${pageUtil.pageIndex>1}">
+                    <a aria-label="Previous" th:href='|/filmvo_page?pageIndex=${pageUtil.pageIndex-1}|'>
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="num:${pageUtil.numbers}"><a
+                        th:style="${pageUtil.pageIndex==num}?'background-color:#2aabd2;font-weight: bold;':''"
+                        class='active data' th:href='|/filmvo_page?pageIndex=${num}|' th:text="${num}">XXX</a></li>
+                <li id="li" th:if="${pageUtil.pageIndex<pageUtil.pageCount}">
+                    <a aria-label="Next" th:href='|/filmvo_page?pageIndex=${pageUtil.pageIndex+1}|'>
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="clearfix"></div>
+    </div>
+    <!--添加弹出框 -->
+    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <form id="addForm">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel" style="text-align: center;">电影信息添加</h4>
+                    </div>
+                    <div class="text-center" style="margin-top: 15px; text-align: center;">
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-3 control-label">电影名称</label>
+                            <div class="">
+                                <input type="text" class="form-control" name="film_name"
+                                       style="margin-left: 0px; display: inherit;width: 230px;" id="filmName2">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-3 control-label">宣传海报</label>
+                            <div class="">
+                                <!--文件上传-->
+                                <button type="button" style="margin-left: 0px; display: inherit;width: 80px;"
+                                        id="btn_addimage">上传海报
+                                </button>
+                                <div class="layui-upload-list">
+                                    <!--回显的图片-->
+                                    <img  style="margin-left:-180px;" class="layui-upload-img" id="addImg" width="200px">
+                                    <input type="hidden" name="poster_url" id="input_add_image"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-3 control-label">电影类型</label>
+                            <div class="">
+                                <select id="addselect" name="category_id" class="form-control"
+                                        style="margin-left: 0px; display: inherit;width: 230px;" >
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-3 control-label">导演</label>
+                            <div class="">
+                                <input type="text" class="form-control" name="director"
+                                       style="margin-left: 0px; display: inherit;width: 230px;" id="director2">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-3 control-label">编剧</label>
+                            <div class="">
+                                <input type="text" name="screenwriter_name" class="form-control"
+                                       style="margin-left: 0px; display: inherit;width: 230px;" id="screenwriters2">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-3 control-label">主演</label>
+                            <div class="">
+                                <select id="addselect_performer" name="category_id" class="form-control"
+                                        style="margin-left: 0px; display: inherit;width: 230px;" >
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-3 control-label">首映时间</label>
+                            <div class="">
+                                <input type="date" name="film_time" class="form-control"
+                                       style="margin-left: 0px; display: inherit;width: 230px;" id="filmTime2">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-3 control-label">片长</label>
+                            <div class="">
+                                <input type="text" name="play_time" class="form-control"
+                                       style="margin-left: 0px; display: inherit;width: 230px;" id="playTime2">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-3 control-label">剧情描述</label>
+                            <div class="">
+                                <textarea name="description" class="form-control" style="margin-left: 0px; display: inherit;width: 230px;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="text-align: center;">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button id="but4" onclick="addFilm();" type="button" class="btn btn-danger" data-dismiss="modal">添加</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+        </form>
+        <!-- /.modal-dialog -->
+    </div>
+    <div align="center" style="margin-bottom: 10px;padding-top: 10px; border-top: 1px solid #b3a6a6;">
+        <button id="but2" type="button" class="btn btn-success" data-toggle='modal' data-target='#add'
+                style=" width: 100px; height: 40px; line-height: 30px;">
+            <span class="glyphicon glyphicon-ok" style="margin-right: 6px; color:white; font-size: 16px;"></span>
+            <span style="color:white; font-weight: 800;font-size: 16px;">添加</span>
+        </button>
+    </div>
+</div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+
+    //异步加载下拉框
+    $(function () {
+        $.getJSON("/getFilmCategorys", function (result) {
+            //alert(JSON.stringify(result));
+            for (var i = 0; i < result.length; i++) {
+                $("#addselect").append("<option value='" + result[i].category_id + "'>" + result[i].film_category + "</option>");
+            }
+        })
+
+        $.getJSON("/getPerformers", function (result) {
+            //alert(JSON.stringify(result));
+            for (var i = 0; i < result.length; i++) {
+                $("#addselect_performer").append("<option value='" + result[i].performer_id + "'>" + result[i].performer_name + "</option>");
+            }
+        })
+
+    });
+
+    //异步文件上传上传
+    //文件上传的JS
+    layui.use('upload', function () {
+        var $ = layui.jquery, upload = layui.upload;
+        //普通图片上传--异步上传
+        var uploadInst = upload.render({
+            elem: '#btn_addimage'  //上传按钮的ID
+            , url: '/image_Upload' //改成您自己的上传后台接口!!!!!!
+            , done: function (res) {
+                //如果上传失败
+                if (res.code == 200) {
+                    alert("/photo/"+res.data);
+                    //回显图片
+                    $("#addImg").prop("src","/photo/"+res.data);
+                    //给表单藏值，新增的时候新增到数据库
+                    $("#input_add_image").val(res.data);
+                    return layer.msg('上传成功');
+                    //给表单中的一个隐藏标签赋值，隐藏上传成功的文件名,给隐藏域赋值
+                } else {
+                    return layer.msg('上传失败');
+                }
+            }
+        });
+    });
+
+    //新增电影
+    function addFilm() {
+        var data=$("#addForm").serialize();
+        alert(data);
+        $.post("/film_add",data,function (result) {
+            alert(JSON.stringify(result));
+        },"json");
+    }
+
+
+</script>

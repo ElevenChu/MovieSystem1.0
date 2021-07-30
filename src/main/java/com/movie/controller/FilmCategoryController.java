@@ -101,7 +101,7 @@ public class FilmCategoryController {
         //总数
         int totalCount = filmCategoryService.totalCount();
         Map<String,Object> map=new HashMap<>();
-        map.put("startPage",(pageIndex-1)*pageSize);
+        map.put("pageStart",(pageIndex-1)*pageSize);
         map.put("pageSize",pageSize);
         //每页数据
         List<FilmCategory> filmCategorys = filmCategoryService.getFilmCategorys(map);

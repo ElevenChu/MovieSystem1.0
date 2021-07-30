@@ -10,7 +10,7 @@
 
     <select id="getFilmCategorys" resultType="FilmCategory">
         select * from film_category where is_delete=1 order by category_id desc
-        limit #{startPage},#{pageSize}
+        limit #{pageStart},#{pageSize}
     </select>
 
     <select id="findById" resultType="FilmCategory">
@@ -28,6 +28,7 @@
     <update id="deleteFilmCategory">
         update film_category set is_delete=0 where category_id=#{category_id}
     </update>
+
     <select id="getAllFilmCategorys" resultType="FilmCategory">
         select * from film_category where is_delete=1
     </select>

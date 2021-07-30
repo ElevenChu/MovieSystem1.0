@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class CommonController {
+
+
     //跳转到管理员登录页面
-    @RequestMapping({"/","/admin"})
+    @RequestMapping({"/admin"})
     public String toAdminLogin(){
         return "admin_login";
     }

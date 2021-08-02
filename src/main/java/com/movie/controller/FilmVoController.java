@@ -2,12 +2,15 @@ package com.movie.controller;
 
 import com.movie.bean.FilmCategory;
 import com.movie.bean.Performer;
+import com.movie.bean.Screenwriter;
 import com.movie.service.FilmCategoryService;
 import com.movie.service.FilmVoService;
 import com.movie.service.PerformerService;
+import com.movie.service.ScreenwriterService;
 import com.movie.utils.CommonResult;
 import com.movie.utils.PageUtil;
 import com.movie.vo.FilmVo;
+import com.sun.xml.internal.stream.buffer.sax.SAXBufferCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,12 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @BelongsProject: MovieSystem
- * @BelongsPackage: com.movie.web
- * @CreateTime: 2020-10-19 11:29
- * @Description: 后台电影信息分页
- */
+
+
 @Controller
 public class FilmVoController {
 
@@ -35,6 +34,8 @@ public class FilmVoController {
     FilmCategoryService filmCategoryService;
 
     PerformerService performerService;
+    @Autowired
+    ScreenwriterService screenwriterService;
 
     /**
      * 01-数据分页
@@ -68,11 +69,24 @@ public class FilmVoController {
         return filmCategoryService.getAllFilmCategorys();
     }
 
-
+    @ResponseBody
     @RequestMapping("/film_add")
     public CommonResult add(FilmVo filmVo){
-        return null;
-
+        CommonResult result;
+        try {
+            //要新增的对象是：FilmVo(film_id=null, film_name=1111, poster_url=2917bb6e-3476-4441-9c9a-ead70e1faf3e.jpg, category_id=1, film_category=null, director=2222, screenwriter_id=1, screenwriter_name=null, performer_id=1, performer_name=null, film_time=2020-10-20, description=4444, play_time=3333, is_delete=null)
+            System.out.println("要新增的对象是："+filmVo);
+            int count = filmVoService.addFilmVo(filmVo);
+            if(count==4){
+                result=new CommonResult(200,"电影添加成功");
+            }else{
+                result=new CommonResult(500,"电影添加失败");
+            }
+        } catch (Exception e) {
+            result=new CommonResult(500,"电影添加失败");
+            e.printStackTrace();
+        }
+        return result;
     }
     @ResponseBody
     @RequestMapping("/getPerformers")
@@ -80,4 +94,9 @@ public class FilmVoController {
         return performerService.findPerformers();
     }
 
+    @ResponseBody
+    @RequestMapping("/getScreenwriter")
+    public List<Screenwriter> getScreenwriter(){
+        return screenwriterService.findScreenwriter();
+    }
 }

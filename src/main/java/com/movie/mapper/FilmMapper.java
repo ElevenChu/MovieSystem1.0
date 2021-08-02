@@ -1,16 +1,14 @@
 package com.movie.mapper;
 
 import com.movie.bean.Film;
+import com.movie.vo.FilmVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
 
-/**
- * @BelongsProject: MovieSystem
- * @BelongsPackage: com.movie.mapper
- * @CreateTime: 2020-10-16 10:54
- * @Description: TODO
- */
+
+
 public interface FilmMapper {
 
     /**
@@ -39,4 +37,34 @@ public interface FilmMapper {
      * @return
      */
     List<Film> findFilms(Map<String,Object> map);
+
+    /**
+     * 新增电影
+     * @param film
+     * @return
+     */
+    int addFilm(Film film);
+
+    /**
+     * 新增电影类别中间表
+     * @return
+     */
+    int addFilm_type(@Param("category_id") int category_id, @Param("film_id") int film_id);
+
+    /**
+     * 新增编剧和电影中间表
+     * @param film_id
+     * @param screenwriter_id
+     * @return
+     */
+    int addScreenwriter_film( @Param("film_id") int film_id,@Param("screenwriter_id") int screenwriter_id);
+
+    /**
+     * 新增主演和电影的中间表
+     * @param film_id
+     * @param performer_id
+     * @return
+     */
+    int addStar(@Param("film_id") int film_id,@Param("performer_id") int performer_id);
+
 }

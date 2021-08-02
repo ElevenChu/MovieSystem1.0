@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.movie.mapper.ScreenwriterMapper">
+
+    <select id="findScreenwriter" resultType="Screenwriter">
+        select * from screenwriter where is_delete=1
+    </select>
+
+    <select id="totalCount" resultType="int">
+        select count(*) from screenwriter where is_delete=1
+    </select>
+
+    <select id="getScreenwriters" resultType="Screenwriter">
+        select * from screenwriter where is_delete=1 order by screenwriter_id desc
+        limit #{startPage},#{pageSize}
+    </select>
+
+    <select id="findById" resultType="Screenwriter">
+        select * from screenwriter where screenwriter_id=#{screenwriter_id}
+    </select>
+
+    <insert id="addScreenwriter">
+        insert  into screenwriter values (null,#{screenwriter_name},1)
+    </insert>
+
+    <update id="updateScreenwriter">
+        update screenwriter set screenwriter_name=#{screenwriter_name} where screenwriter_id=#{screenwriter_id}
+    </update>
+
+    <update id="deleteScreenwriter">
+        update screenwriter set is_delete=0 where screenwriter_id=#{screenwriter_id}
+    </update>
+
+</mapper>

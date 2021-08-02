@@ -19,6 +19,20 @@
         order by film.film_id desc limit #{startPage},#{pageSize}
     </select>
 
+    <select id="findFilmVoById" resultType="com.movie.vo.FilmVo">
+        select film.is_delete,film.poster_url,film.description,film.film_id,film.film_name,film.director,film.film_time,film.play_time,screenwriter.screenwriter_name,performer.performer_name,film_category.film_category from film INNER JOIN film_and_type on film.film_id=film_and_type.film_id
+                                                                                                                                                                                                                                     INNER JOIN film_category on film_and_type.category_id=film_category.category_id
+                                                                                                                                                                                                                                     INNER JOIN screenwriter_film on film.film_id=screenwriter_film.film_id
+                                                                                                                                                                                                                                     INNER JOIN screenwriter on screenwriter_film.screenwriter_id=screenwriter.screenwriter_id
+                                                                                                                                                                                                                                     INNER JOIN star on film.film_id=star.film_id
+                                                                                                                                                                                                                                     INNER JOIN performer on star.performer_id=performer.performer_id
+        where film.film_id=#{film_id}
+    </select>
+
+    <update id="updateState">
+        update film set is_delete=#{is_delete} where film_id=#{film_id}
+    </update>
+
 
 
 </mapper>

@@ -21,4 +21,6 @@ public class FilmVo {
     private Integer is_delete;
     private String description;
     private Integer category_id;
+    private Integer screenwriter_id;
+    private Integer performer_id;
 }

@@ -160,10 +160,10 @@
             <tr>
                 <td th:each="film:${latestFilms}">
                     <div style="width: 250px; margin:10px;">
-                        <a href="filma?filmId=2"><img th:src="${film.poster_url}" style="width: 250px;height: 380px"/></a>
+                        <a th:href="|/film_findFilmVoById?film_id=${film.film_id}|"><img th:src="${film.poster_url}" style="width: 250px;height: 380px"/></a>
                         <div class="piao">
                             <a href="filma?filmId=2"><p style="color: white; top: 50px;" th:text="${film.film_name}">被光抓走的人</p></a>
-                            <a href="filma?filmId=2"><p style="color: white; top: 50px;" th:text="${film.director}">导演:董润年</p></a>
+                            <a href="filma?filmId=2"><p style="color: white; top: 50px;">导演:<span th:text="${film.director}">董润年</span></p></a>
                         </div>
                     </div>
                 </td>
@@ -177,12 +177,23 @@
     <div class="container">
         <table bgcolor="0" align="center">
             <tr>
-                <td th:each="film:${filmsByFilmCategory_1}">
+                <td th:each="film,filmState:${filmsByFilmCategory_1}" th:if="${filmState.index<4}">
                     <div style="width: 250px; margin:10px;">
-                        <a href="filma?filmId=2"><img th:src="${film.poster_url}" style="width: 250px;height: 380px"/></a>
+                        <a th:href="|/film_findFilmVoById?film_id=${film.film_id}|"><img th:src="${film.poster_url}" style="width: 250px;height: 380px"/></a>
                         <div class="piao">
                             <a href="filma?filmId=2"><p style="color: white; top: 50px;" th:text="${film.film_name}">被光抓走的人</p></a>
-                            <a href="filma?filmId=2"><p style="color: white; top: 50px;" th:text="${film.director}">导演:董润年</p></a>
+                            <a href="filma?filmId=2"><p style="color: white; top: 50px;">导演:<span th:text="${film.director}">董润年</span></p></a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td th:each="film,filmState:${filmsByFilmCategory_1}" th:if="${filmState.index>3}">
+                    <div style="width: 250px; margin:10px;">
+                        <a th:href="|/film_findFilmVoById?film_id=${film.film_id}|"><img th:src="${film.poster_url}" style="width: 250px;height: 380px"/></a>
+                        <div class="piao">
+                            <a href="filma?filmId=2"><p style="color: white; top: 50px;" th:text="${film.film_name}">被光抓走的人</p></a>
+                            <a href="filma?filmId=2"><p style="color: white; top: 50px;">导演:<span th:text="${film.director}">董润年</span></p></a>
                         </div>
                     </div>
                 </td>
@@ -197,10 +208,10 @@
             <tr>
                 <td th:each="film:${filmsByFilmCategory_2}">
                     <div style="width: 250px; margin:10px;">
-                        <a href="filma?filmId=2"><img th:src="${film.poster_url}" style="width: 250px;height: 380px"/></a>
+                        <a th:href="|/film_findFilmVoById?film_id=${film.film_id}|"><img th:src="${film.poster_url}" style="width: 250px;height: 380px"/></a>
                         <div class="piao">
                             <a href="filma?filmId=2"><p style="color: white; top: 50px;" th:text="${film.film_name}">被光抓走的人</p></a>
-                            <a href="filma?filmId=2"><p style="color: white; top: 50px;" th:text="${film.director}">导演:董润年</p></a>
+                            <a href="filma?filmId=2"><p style="color: white; top: 50px;"><span th:text="${film.director}">董润年</span></p></a>
                         </div>
                     </div>
                 </td>
@@ -215,10 +226,10 @@
             <tr>
                 <td th:each="film:${filmsByFilmCategory_3}">
                     <div style="width: 250px; margin:10px;">
-                        <a href="filma?filmId=2"><img th:src="${film.poster_url}" style="width: 250px;height: 380px"/></a>
+                        <a th:href="|/film_findFilmVoById?film_id=${film.film_id}|"><img th:src="${film.poster_url}" style="width: 250px;height: 380px"/></a>
                         <div class="piao">
                             <a href="filma?filmId=2"><p style="color: white; top: 50px;" th:text="${film.film_name}">被光抓走的人</p></a>
-                            <a href="filma?filmId=2"><p style="color: white; top: 50px;" th:text="${film.director}">导演:董润年</p></a>
+                            <a href="filma?filmId=2"><p style="color: white; top: 50px;"><span th:text="${film.director}">董润年</span></p></a>
                         </div>
                     </div>
                 </td>
@@ -296,6 +307,15 @@
                         </td>
                         <td>
                             <input type="text" class="form-control" style="display: inherit;width: 200px;" id="account" placeholder="请输入账号">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" width="80px">
+                            <label for="firstname" class="control-label">性别</label>
+                        </td>
+                        <td>
+                            <input type="radio" name="sex" value="1" checked  >女
+                            <input type="radio" name="sex" value="2"  >男
                         </td>
                     </tr>
                     <tr>

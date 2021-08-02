@@ -9,12 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @BelongsProject: MovieSystem
- * @BelongsPackage: com.movie.service.impl
- * @CreateTime: 2020-10-16 11:07
- * @Description: TODO
- */
+
 @Service
 public class FilmServiceImpl implements FilmService {
 
@@ -39,5 +34,25 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public List<Film> findFilms(Map<String, Object> map) {
         return filmMapper.findFilms(map);
+    }
+
+    @Override
+    public int addFilm(Film film) {
+        return filmMapper.addFilm(film);
+    }
+
+    @Override
+    public int addFilm_type(int category_id, int film_id) {
+        return filmMapper.addFilm_type(category_id,film_id);
+    }
+
+    @Override
+    public int addScreenwriter_film(int film_id, int screenwriter_id) {
+        return filmMapper.addScreenwriter_film(film_id,screenwriter_id);
+    }
+
+    @Override
+    public int addStar(int film_id, int performer_id) {
+        return filmMapper.addStar(film_id,performer_id);
     }
 }

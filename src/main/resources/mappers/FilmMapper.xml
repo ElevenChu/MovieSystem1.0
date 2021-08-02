@@ -29,5 +29,23 @@
         limit #{pageStart},#{pageSize}
     </select>
 
+    <!--新增成功之后获取新增成功的ID值-->
+    <insert id="addFilm" keyProperty="film_id" useGeneratedKeys="true">
+        insert into film values (null,#{film_name},#{film_time},#{director},
+                                 #{play_time},#{description},#{poster_url},1)
+    </insert>
+
+    <insert id="addFilm_type">
+        insert  into film_and_type values(null,#{category_id},#{film_id})
+    </insert>
+
+    <insert id="addScreenwriter_film">
+        insert  into screenwriter_film values(null,#{film_id},#{screenwriter_id})
+    </insert>
+
+    <insert id="addStar">
+        insert into star values (null,#{film_id},#{performer_id})
+    </insert>
+
 
 </mapper>

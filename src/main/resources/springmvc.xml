@@ -40,4 +40,11 @@
     <!--开启SpringMvc注解驱动-->
     <mvc:annotation-driven/>
 
+    <!--配置SpringMVC文件上传解析器-->
+    <!-- id 的值是固定的 程序内部使用-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--字节为单位：文件上传的大小   1MB=1024KB  1KB=1024byte  1byte=8bit-->
+        <property name="maxUploadSize" value="5242880"/>
+    </bean>
+
 </beans>

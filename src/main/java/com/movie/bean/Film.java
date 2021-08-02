@@ -17,6 +17,7 @@ public class Film {
     private Integer play_time;
     private String poster_url;
     private Integer is_delete;
+    private String description;
 
 
 }

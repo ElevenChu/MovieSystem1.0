@@ -1,8 +1,11 @@
 package com.movie.controller;
 
 import com.movie.bean.FilmCategory;
+import com.movie.bean.Performer;
 import com.movie.service.FilmCategoryService;
 import com.movie.service.FilmVoService;
+import com.movie.service.PerformerService;
+import com.movie.utils.CommonResult;
 import com.movie.utils.PageUtil;
 import com.movie.vo.FilmVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,8 @@ public class FilmVoController {
     @Autowired
     FilmCategoryService filmCategoryService;
 
+    PerformerService performerService;
+
     /**
      * 01-数据分页
      * @return
@@ -54,13 +59,25 @@ public class FilmVoController {
 
 
     /**
-     * 下拉框数据
+     * 下拉框数据1
      * @return
      */
     @ResponseBody
     @RequestMapping("/getFilmCategorys")
     public List<FilmCategory> getFilmCategorys(){
         return filmCategoryService.getAllFilmCategorys();
+    }
+
+
+    @RequestMapping("/film_add")
+    public CommonResult add(FilmVo filmVo){
+        return null;
+
+    }
+    @ResponseBody
+    @RequestMapping("/getPerformers")
+    public List<Performer> getPerformers(){
+        return performerService.findPerformers();
     }
 
 }

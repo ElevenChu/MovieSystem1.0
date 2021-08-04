@@ -1,0 +1,255 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="/js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.css" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <style type="text/css">
+        .container {
+            margin-top: 30px;
+            border: 1px solid #b3a6a6;
+            border-radius: 10px;
+        }
+
+        .tou {
+            background: whitesmoke;
+            height: 30px;
+            line-height: 30px;
+            text-indent: 2em;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            border-bottom: 1px solid #b3a6a6;
+        }
+
+        table {
+            text-align: center;
+            margin-top: 10px;
+            border-top: 1px solid #b3a6a6;
+        }
+
+        table th {
+            text-align: center;
+        }
+
+        button span {
+            color: red;
+        }
+
+        label {
+            line-height: 35px;
+        }
+
+        .form-group {
+            margin-left: 130px;
+        }
+    </style>
+    <script>
+        //添加
+        function addScreenwriter() {
+            $.ajax({
+                type:"post",
+                url:"/screenwriter_add",
+                data:{screenwriter_name:$("#addname").val()},
+                dataType: "json",
+                success:function(result){
+                    if (result.code==200){
+                        alert(result.msg);
+                        window.location.reload();
+                    } else{
+                        alert(result.msg);
+                    }
+                }
+            });
+        }
+
+        var screenwriter_id;
+
+        /**
+         * 给删除的编号category_id存值
+         * @param category_id
+         */
+        function deleteScreenwriter(screenwriter_id) {
+            this.screenwriter_id=screenwriter_id;
+        }
+        function delete_Screenwriter() {
+            $.getJSON("/delete_screenwriter","screenwriter_id="+screenwriter_id,function (result) {
+                if (result.code==200){
+                    alert(result.msg);
+                    window.location.reload();
+                } else{
+                    alert(result.msg);
+                }
+            });
+        }
+
+        //跳转 更新
+        function toupdate(screenwriter_id) {
+            $.getJSON("/screenwriter_toupdate","screenwriter_id="+screenwriter_id,function (result) {
+                //alert(JSON.stringify(data));
+                //回显更新框
+                $("#screenwriter_id").val(result.screenwriter_id);
+                $("#screenwriter_name").val(result.screenwriter_name);
+            });
+        }
+
+        //更新
+        function updateScreenwriter() {
+            var data=$("#updateForm").serialize();
+            //alert(data);
+            $.post("/screenwriter_update",data,function (result) {
+                if (result.code==200){
+                    alert(result.msg);
+                    window.location.reload();
+                } else{
+                    alert(result.msg);
+                }
+            },"json");
+        }
+
+    </script>
+</head>
+
+<body>
+<div class="container" style="padding: 0px;">
+    <div class="tou"><span class="glyphicon glyphicon-align-justify"></span><span style="font-weight: bold; margin-left: 6px;">操作信息管理</span></div>
+    <table class="table " style="margin-top: 0px;">
+        <caption><span id="sum" style="margin-left: 30px;">共7条</span></caption>
+        <thead>
+        <tr>
+            <th>编辑编号</th>
+            <th>编剧名字</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="table">
+
+        <tr th:each="screenwriter:${pageUtil.records}">
+            <td th:text="${screenwriter.screenwriter_id}">1</td>
+            <td th:text="${screenwriter.screenwriter_name}">动作</td>
+            <td>
+                <button th:onclick="|toupdate(${screenwriter.screenwriter_id});|" type='button' data-toggle='modal' data-target='#myModal'  class='btn btn-default' style='border:1px solid #32CD32;'>
+                            <span class='glyphicon glyphicon-pencil' style='margin-right: 6px;color: #32CD32;'>
+                            </span><span style='color: #32CD32;'>修改</span></button>
+                <button th:onclick="|deleteScreenwriter(${screenwriter.screenwriter_id});|" type='button' data-toggle='modal' data-target='#delete' class='btn btn-default' style='border:1px solid red; margin-left: 6px;'>
+                    <span class='glyphicon glyphicon-trash' style='margin-right: 6px;'></span><span>删除</span>
+                </button>
+            </td>
+        </tr>
+
+
+        </tbody>
+
+        <!-- 删除 -->
+        <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel" style="text-align: center;">是否删除编剧?<font id="leix" color="red"></font>"<font id="idx" style="display: none;"></font></h4>
+                    </div>
+                    <div class="modal-footer" style="text-align: center;">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button  type="button" class="btn btn-danger" onclick="delete_Screenwriter();">确定删除</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+        <!--弹出框 -->
+        <div class="modal fade" id="myModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <form id="updateForm">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title"  style="text-align: center;">电影编剧修改</h4>
+                        </div>
+                        <div class="text-center" style="margin-top: 15px; text-align: center;">
+                            <div class="form-group">
+                                <label for="firstname" class="col-sm-3 control-label">编剧编号</label>
+                                <div class="">
+                                    <input type="text" readonly="readonly"
+                                           class="form-control" name="screenwriter_id"  style="margin-left: 0px; display: inherit;width: 230px;" id="screenwriter_id">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastname" class="col-sm-3 control-label">电影编剧</label>
+                                <div class="">
+                                    <input name="screenwriter_name" type="text" class="form-control" style="display: inherit;width: 230px;" id="screenwriter_name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="text-align: center;">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button id="but4" type="button" class="btn btn-danger" onclick="updateScreenwriter();">确定</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+            </form>
+            <!-- /.modal-dialog -->
+        </div>
+    </table>
+
+    <!--分页-->
+    <div id="fenye" class="panel-footer" style="text-align: center;">
+        <nav style="height: 35px;">
+            <ul class="pagination" style="margin-top:0px;">
+                <li id="Previous" th:if="${pageUtil.pageIndex>1}">
+                    <a aria-label="Previous" th:href='|/screenwriter_page?pageIndex=${pageUtil.pageIndex-1}|'>
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="num:${pageUtil.numbers}"><a th:style="${pageUtil.pageIndex==num}?'background-color:#2aabd2;font-weight: bold;':''" class='active data' th:href='|/screenwriter_page?pageIndex=${num}|' th:text="${num}">XXX</a></li>
+                <li id="li" th:if="${pageUtil.pageIndex<pageUtil.pageCount}">
+                    <a aria-label="Next" th:href='|/screenwriter_page?pageIndex=${pageUtil.pageIndex+1}|'>
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="clearfix"></div>
+    </div>
+
+    <div align="center" style="margin-bottom: 10px;padding-top: 10px; border-top: 1px solid #b3a6a6;">
+        <button id="but2" type="button" data-toggle='modal' data-target='#add' class="btn btn-success" style=" width: 100px; height: 40px; line-height: 30px;">
+            <span class="glyphicon glyphicon-ok"  style="margin-right: 6px; color:white; font-size: 16px;"></span>
+            <span  style="color:white; font-weight: 800;font-size: 16px;">增加</span>
+        </button>
+    </div>
+
+    <!--新增框-->
+    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title"  style="text-align: center;">电影编剧</h4>
+                </div>
+                <div class="text-center" style="margin-top: 15px; text-align: center;">
+                    <div class="form-group">
+                        <label for="lastname" class="col-sm-3 control-label">新增电影编剧</label>
+                        <div class="">
+                            <input type="text"  class="form-control" style="display: block;width: 230px;" id="addname">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button  type="button" class="btn btn-danger" onclick="addScreenwriter();" data-dismiss="modal">添加</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</div>
+</body>
+
+</html>

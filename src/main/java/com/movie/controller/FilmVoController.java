@@ -99,4 +99,16 @@ public class FilmVoController {
     public List<Screenwriter> getScreenwriter(){
         return screenwriterService.findScreenwriter();
     }
+
+    /**
+     * 根据ID查询电影详情数据
+     * @param film_id
+     * @return
+     */
+    @RequestMapping("/film_findFilmVoById")
+    public String  findFilmVoById(int film_id,Model model){
+        FilmVo filmVo = filmVoService.findFilmVoById(film_id);
+        model.addAttribute("filmVo",filmVo);
+        return "user_film_detail";
+    }
 }

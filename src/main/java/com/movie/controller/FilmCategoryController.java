@@ -1,4 +1,4 @@
-package com.movie.controller;
+package com.movie.web;
 
 import com.movie.bean.FilmCategory;
 import com.movie.service.FilmCategoryService;
@@ -101,7 +101,7 @@ public class FilmCategoryController {
         //总数
         int totalCount = filmCategoryService.totalCount();
         Map<String,Object> map=new HashMap<>();
-        map.put("pageStart",(pageIndex-1)*pageSize);
+        map.put("startPage",(pageIndex-1)*pageSize);
         map.put("pageSize",pageSize);
         //每页数据
         List<FilmCategory> filmCategorys = filmCategoryService.getFilmCategorys(map);
@@ -109,7 +109,7 @@ public class FilmCategoryController {
         PageUtil<FilmCategory> pageUtil=new PageUtil<>(pageIndex,pageSize,totalCount,filmCategorys);
         //存值
         model.addAttribute("pageUtil",pageUtil);
-        return "movie_type";
+        return "admin_movie_type";
     }
 
 }

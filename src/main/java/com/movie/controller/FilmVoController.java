@@ -111,4 +111,18 @@ public class FilmVoController {
         model.addAttribute("filmVo",filmVo);
         return "user_film_detail";
     }
+
+    @ResponseBody
+    @RequestMapping("/film_changeState")
+    public CommonResult film_changeState(Integer film_id,Integer is_delete){
+    CommonResult result;
+        int count = filmVoService.updateState(film_id, is_delete);
+        if (count>0){
+            result=new CommonResult(200,"操作成功");
+
+        }else {
+            result=new CommonResult(500,"操作失败");
+        }
+        return result;
+    }
 }

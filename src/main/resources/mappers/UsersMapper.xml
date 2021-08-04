@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.movie.mapper.UsersMapper">
+
+
+    <select id="user_login" resultType="Users">
+        select * from users where user_account=#{user_account} and user_password=#{user_password} and is_delete=1
+    </select>
+
+    <insert id="user_register">
+        insert  into users values (null,#{user_name},#{user_account},#{user_password},#{sex},
+                                   #{user_emli},#{user_phone},null,now(),null,null,1)
+    </insert>
+
+
+</mapper>

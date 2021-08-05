@@ -18,6 +18,21 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public int user_registry(Users u) {
-        return usersMapper.user_registry(u);
+        return usersMapper.user_register(u);
+    }
+
+    @Override
+    public int user_updateInfomation(Users users) {
+        return usersMapper.user_updateInfomation(users);
+    }
+
+    @Override
+    public Users findById(int user_id) {
+        return usersMapper.findById(user_id);
+    }
+
+    @Override
+    public int updatePhoto(Integer user_id, String newPhoto) {
+        return usersMapper.updatePhoto(user_id,newPhoto);
     }
 }

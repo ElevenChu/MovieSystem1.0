@@ -8,9 +8,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
 @Controller
 public class UsersController {
@@ -70,4 +75,70 @@ public class UsersController {
         System.out.println("查询数据....");
         return "user_personal";
     }
+    /**
+     * 异步更新信息
+     * @param users
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/user_updateInfomation")
+    public CommonResult user_updateInfomation(Users users,HttpSession session){
+        System.out.println("要更新的对象是:"+users);
+        CommonResult result;
+        int count = usersService.user_updateInfomation(users);
+        if(count>0){
+            //把更新成功的对象查询一下
+            Users u = usersService.findById(users.getUser_id());
+            session.setAttribute("loginUser",u);
+            result=new CommonResult(200,"用户更新信息成功");
+        }else{
+            result=new CommonResult(500,"用户更新信息失败");
+        }
+        return result;
+    }
+
+    /**
+     * 修改头像
+     */
+    @RequestMapping("/user_updatePhoto")
+    public void user_updatePhoto(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
+        response.setContentType("text/html;charset=utf-8");
+        try {
+            //要上传的原始的文件名
+            String filename = file.getOriginalFilename();
+            System.out.println("要上传的原始的文件名是:"+filename);  // 本人之死.jpg
+            if(!"".equals(filename)){
+                String fileKuozhanming = filename.substring(filename.lastIndexOf("."));
+                System.out.println("要上传的文件的扩展名:"+fileKuozhanming);
+                //生成一个新的永远不重复的文件名
+                String newFileName= UUID.randomUUID().toString()+fileKuozhanming;
+                System.out.println("生成一个新的永远不重复的文件名："+newFileName);
+                //获取真实的文件上传的服务器路径
+                String realPath=request.getServletContext().getRealPath("/photo")+"/"+newFileName;
+                //E:\Server\MovieSystem\target\MovieSystem\photo/a43d6dfd-327a-4ec4-a3a5-6449230301f8.jpg
+                System.out.println("上传的地址是:"+realPath);
+                //开始文件上传
+                file.transferTo(new File(realPath));
+                System.out.println("文件上传成功~~~");
+                HttpSession session= request.getSession();
+                Users loginuser= (Users)session.getAttribute("loginUser");
+                // 数据库的头像值的需要更新
+                int count=usersService.updatePhoto(loginuser.getUser_id(),"/photo/"+newFileName);
+                if(count>0){
+                    //更新Session中数据
+                    Users u = usersService.findById(loginuser.getUser_id());
+                    session.setAttribute("loginUser",u);
+                    response.getWriter().write("<script>alert('头像更新成功');location.href='/user_topersonal';</script>");
+                }else{
+                    response.getWriter().write("<script>alert('头像更新异常');location.href='/user_topersonal';</script>");
+                }
+            }else{
+                response.getWriter().write("<script>alert('请选择要上传的头像');location.href='/user_topersonal';</script>");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            response.getWriter().write("<script>alert('头像更新异常');location.href='/user_topersonal';</script>");
+        }
+    }
+
 }

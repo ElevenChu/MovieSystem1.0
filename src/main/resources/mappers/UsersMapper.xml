@@ -14,5 +14,18 @@
                                    #{user_emli},#{user_phone},null,now(),null,null,1)
     </insert>
 
+    <update id="user_updateInfomation">
+        update users set user_name=#{user_name},sex=#{sex},user_phone=#{user_phone},user_emli=#{user_emli},update_time=now()
+        where user_id=#{user_id}
+    </update>
+
+    <select id="findById" resultType="Users">
+        select * from users where user_id=#{user_id}
+    </select>
+
+    <update id="updatePhoto">
+        update users set img_url=#{newPhoto} where user_id=#{user_id}
+    </update>
+
 
 </mapper>

@@ -1,6 +1,6 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">>
 <head>
-    <title>电影详细</title>
+    <title>个人简介</title>
 </head>
 <script src="/js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>
@@ -23,21 +23,6 @@
 
     }, 1)
 </script>
-
-<style type="text/css">
-    body {
-        background: #2E323B;
-    }
-    .detailed{
-        background: white;
-        border-radius:20px;
-        padding-bottom: 50px;
-    }
-    #register table tr {
-        height: 50px;
-    }
-
-</style>
 <body>
 <div class="container">
     <div class="row" id="tou">
@@ -68,6 +53,11 @@
                     </div>
 
                     <div style="float: right;" id="islog">
+
+                        <span th:if="${session.loginUser==null}">
+                            <script>alert("用户未登录！");location.href="/index";</script>
+                        </span>
+
                         <a th:if="${session.loginUser!=null}" href="personal"><img  th:src="${session.loginUser.img_url}" class="img-circle" style="width: 40px; margin-right: 10px; height: 40px"></a>
                         <a th:if="${session.loginUser!=null}" href="personal" th:text="${session.loginUser.user_name}">fuckyou!</a>&nbsp;&nbsp;&nbsp;
                         <button th:if="${session.loginUser!=null}" class="btn btn-danger" data-toggle="modal" data-target="#myModal" style="margin-left: 20px;"><span class=" glyphicon glyphicon-off" style="font-size: 14px; margin-right: 5px;"></span><span >退出</span></button>
@@ -80,31 +70,133 @@
         </nav>
     </div>
 </div>
-
 <div style="margin: 30px;">
-
 </div>
+<div class="container detailed">
+    <strong style="font-size: 30px; margin:20px; display: block;">个人中心</strong>
 
-<div class="container detailed" >
-    <div class="container" style="margin-top: 20px;">
-        <div><strong id="biaoti" style="font-size: 26px;" th:text="${filmVo.film_name}">XXX</strong>&nbsp;&nbsp;<font style="color: #adadad" th:text="${filmVo.film_time}">(${film.filmTime})</font></div>
-        <img style="float: left; display: block; height: 300px; width: 250px; margin-right: 20px;" th:src="${filmVo.poster_url}" />
-        <div>
-            <div style="padding-top: 15px;line-height: 25px;">
-                <p>导演：<font id="daoyan" th:text="${filmVo.director}">XXXX</font></p>
-                <p>编剧：<font id="bianju" th:text="${filmVo.screenwriter_name}">XXX}</font></p>
-                <p>主演：<font id="zhuyan" th:text="${filmVo.performer_name}">XXX</font></p>
-                <p>类型：<font id="leixing" th:text="${filmVo.film_category}">XXX}</font></p>
-                <p>语言：<font id="yuyan">中文/英文</font></p>
-                <p>首映时间：<font id="shangying" th:text="${filmVo.film_time}">XXX</font></p>
-                <p>片长：<font id="pianchang" ><span th:text="${filmVo.play_time}"></span>分钟</font></p>
-                <p>描述：<font id="pianchang" th:text="${filmVo.description}">XXX</font></p>
-                <strong>
-                    <a href="goupiao?filmId=${film.filmId}"><font class ="btn btn-danger glyphicon glyphicon-shopping-cart">购票 </font></a>
-                </strong>
+    <div class="container" style="margin: 30px;line-height: 30px;font-size: 18px; position: relative;">
+        <strong>昵称:<span id="userName3" th:text="${session.loginUser.user_name}">XXXX</span></strong><br>
+        <strong>性别:<span id="sex3" th:text="${session.loginUser.sex==1?'女':'男'}"></span></strong><br>
+        <strong>手机:<span id="userPhone3" th:text="${session.loginUser.user_phone}">XXX</span></strong><br>
+        <strong>邮箱:<span id="userEmli3" th:text="${session.loginUser.user_emli}">XXX</span></strong><br>
+        <img data-toggle='modal' data-target='#upimg' th:src="${session.loginUser.img_url}" style="width: 180px;height: 180px;position: absolute ;right:15%;top:-45%;float: right">
+        <a data-toggle='modal' data-target='#userUp' style="font-size: 15px">修改用户信息</a>&nbsp;&nbsp;
+    </div>
+    <div class="container" style="margin-left: 30px;margin-top: 40px;">
+        <table class="table table-striped" style="width: 80%">
+            <caption><span id="sum" style="margin-left: 30px;">共${map.conut}条数据</span></caption>
+            <thead>
+            <tr>
+                <th>单号</th>
+                <th>电影</th>
+                <th>大厅</th>
+                <th>座位</th>
+                <th>票价</th>
+                <th>播放时间</th>
+            </tr>
+            </thead>
+            <tbody id="table3">
+            <c:forEach items="${map.info}" var="ticket">
+                <tr>
+                    <td id="ticketId">${ticket.ticketId}</td>
+                    <td id="filmName">${ticket.play.film.filmName}</td>
+                    <td id="roomName">${ticket.play.room.roomName}</td>
+                    <td id="seat">${ticket.seat.seat}</td>
+                    <td id="money">${ticket.play.money}</td>
+                    <td id="">${ticket.play.playTime}</td>
+                </tr>
+            </c:forEach>
+            <tr style="height: 35px">
+                <td colspan="6" style="padding: 0px;">
+                    <!--分页-->
+                    <div id="fenye" class="panel-footer" style="text-align: center;padding: 0px; display: none">
+                        <nav style="height: 35px;">
+                            <ul class="pagination" style="margin-top:0px;">
+                                <li id="Previous">
+                                    <a aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+
+                                <li id="li">
+                                    <a aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div class="clearfix"></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--用户修改模态框 -->
+<div class="modal fade" id="userUp" style="margin-top: 200px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">用户信息修改</h4>
+            </div>
+            <div class="text-center" style="margin-top: 15px; text-align: center; margin-bottom: 15px;">
+                <form id="userInfoForm">
+                    <table align="center">
+                        <tr>
+                            <td align="center" width="80px">
+                                <label  class="control-label">昵称</label>
+                            </td>
+                            <td>
+                                <input type="text" th:value="${session.loginUser.user_name}" name="user_name" class="form-control" style="display: inherit;width: 200px;" id="userName4" placeholder="修改昵称">
+                                <input type="hidden" name="user_id" th:value="${session.loginUser.user_id}"/>
+                            </td>
+                        </tr>
+                        <tr height="50px">
+                            <td align="center" width="80px">
+                                <label  class="control-label">性别</label>
+                            </td>
+                            <td>
+                                <select id="select" class="form-control" name="sex">
+                                    <option value="2" th:selected="${session.loginUser.sex==2}">男</option>
+                                    <option value="1" th:selected="${session.loginUser.sex==1}">女</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr height="50px">
+                            <td align="center" width="80px">
+                                <label  class="control-label">手机</label>
+                            </td>
+                            <td>
+                                <input type="text" th:value="${session.loginUser.user_phone}" name="user_phone" class="form-control" style="display: inherit;width: 200px;" id="userPhone4" placeholder="修改手机">
+                            </td>
+                        </tr>
+                        <tr height="20px">
+                            <td align="center" width="80px">
+                                <label  class="control-label">邮箱</label>
+                            </td>
+                            <td>
+                                <input type="text" th:value="${session.loginUser.user_emli}" name="user_emli" class="form-control" style="display: inherit;width: 200px;" id="userEmli4" placeholder="修改邮箱">
+                            </td>
+                        </tr>
+                        <tr height="20px">
+                            <td align="center" width="80px" colspan="2">
+                                <span style="color: red" id="message_update_info"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer" style="position:relative;height: 60px; line-height: 60px;">
+                <button style="position: absolute; left: 42%;" type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+                <button  id="toUp" onclick="updateUserInfo();" style="position: absolute; left: 52%;" type="button" class="btn btn-success">确认修改</button>
             </div>
         </div>
+        <!-- /.modal-content -->
     </div>
+    <!-- /.modal-dialog -->
 </div>
 
 <!--登录模态框 -->
@@ -260,6 +352,28 @@
     <!-- /.modal-dialog -->
 </div>
 
+
+<!-- 修改头像 -->
+<div class="modal fade" id="upimg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel" style="text-align: center;">跟换图片</h4>
+            </div>
+            <div class="text-center" style="margin-top: 15px; text-align: center; margin-bottom: 15px;">
+                <form action="/user_updatePhoto" method="post" enctype="multipart/form-data">
+                    <input type="file" style="margin-left: 30%" id="file" name="file">
+                    <input type="submit" class="btn btn-success" value="跟换">
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
 </body>
 </html>
 
@@ -307,6 +421,21 @@
                 window.location.reload();
             }
         });
+    }
+
+    //修改个人信息
+    function updateUserInfo() {
+        var data=$("#userInfoForm").serialize();
+        //alert(data);
+        $.post("/user_updateInfomation",data,function (result) {
+            //alert(JSON.stringify(result));
+            if(result.code==200){
+                alert("个人信息修改成功！");
+                window.location.reload();
+            }else{
+                $("#message_update_info").text(result.msg);
+            }
+        },"json");
     }
 
 </script>

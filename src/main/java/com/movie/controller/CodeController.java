@@ -1,5 +1,6 @@
 package com.movie.controller;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,6 +20,7 @@ import java.util.Random;
  * @Description: TODO
  */
 @Controller
+@Scope("prototype")
 public class CodeController {
 
     private static final char[] CH = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".toCharArray();

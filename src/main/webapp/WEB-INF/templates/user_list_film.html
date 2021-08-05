@@ -147,8 +147,12 @@
                     <div style="float: right;" id="islog">
 
 
-                        <img data-toggle='modal' data-target='#login' id="img" src="/img/ht.jpg" class="img-circle" style="width: 40px; margin-right: 10px; height: 40px">
-                        <a data-toggle='modal' data-target='#login'>登录</a>&nbsp;&nbsp;
+                        <a th:if="${session.loginUser!=null}" href="personal"><img  th:src="${session.loginUser.img_url}" class="img-circle" style="width: 40px; margin-right: 10px; height: 40px"></a>
+                        <a th:if="${session.loginUser!=null}" href="personal" th:text="${session.loginUser.user_name}">fuckyou!</a>&nbsp;&nbsp;&nbsp;
+                        <button th:if="${session.loginUser!=null}" class="btn btn-danger" data-toggle="modal" data-target="#myModal" style="margin-left: 20px;"><span class=" glyphicon glyphicon-off" style="font-size: 14px; margin-right: 5px;"></span><span >退出</span></button>
+
+                        <img th:if="${session.loginUser==null}" data-toggle='modal' data-target='#login' id="img" src="/img/ht.jpg" class="img-circle" style="width: 40px; margin-right: 10px; height: 40px">
+                        <a   th:if="${session.loginUser==null}" data-toggle='modal' data-target='#login'>登录</a>&nbsp;&nbsp;
 
                     </div>
                 </div>
@@ -168,10 +172,10 @@
         <tr>
             <td th:each="film,filmStat:${pageUtil.records}" th:if="${filmStat.index<4}">
                 <div style="width: 250px; margin:10px;">
-                    <a href="filma?filmId=1"><img th:src="${film.poster_url}" style="width: 250px;height: 380px"/></a>
+                    <a th:href="|/film_findFilmVoById?film_id=${film.film_id}|"><img th:src="${film.poster_url}" style="width: 250px;height: 380px"/></a>
                     <div class="piao">
-                        <a href="filma?filmId=1"><p style="color: white; top: 50px;" th:text="${film.film_name}">南方车站的聚会</p></a>
-                        <a href="filma?filmId=1"><p style="color: white; top: 50px;">导演:<span th:text="${film.director}">刁亦男</span></p></a>
+                        <a th:href="|/film_findFilmVoById?film_id=${film.film_id}|"><p style="color: white; top: 50px;" th:text="${film.film_name}">南方车站的聚会</p></a>
+                        <a th:href="|/film_findFilmVoById?film_id=${film.film_id}|"><p style="color: white; top: 50px;">导演:<span th:text="${film.director}">刁亦男</span></p></a>
                     </div>
                 </div>
             </td>
@@ -222,28 +226,44 @@
                 <h4 class="modal-title" id="myModalLabel">用户登录</h4>
             </div>
             <div class="text-center" style="margin-top: 15px; text-align: center; margin-bottom: 15px;">
-                <table align="center" id="table">
-                    <tr>
-                        <td align="center" width="80px">
-                            <label for="firstname" class="control-label">用户名</label>
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" style="display: inherit;width: 200px;" id="userName" placeholder="请输入用户名">
-                        </td>
-                    </tr>
-                    <tr height="50px">
-                        <td align="center" width="80px">
-                            <label for="firstname" class="control-label">密码</label>
-                        </td>
-                        <td>
-                            <input type="password" class="form-control" style="display: inherit;width: 200px;" id="userPassword" placeholder="请输入密码">
-                        </td>
-                    </tr>
-                </table>
+                <form id="loginForm">
+                    <table align="center" id="table">
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">用户名</label>
+                            </td>
+                            <td>
+                                <input type="text" name="user_account" class="form-control" style="display: inherit;width: 200px;" id="userName" placeholder="请输入用户名">
+                            </td>
+                        </tr>
+                        <tr height="50px">
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">密码</label>
+                            </td>
+                            <td>
+                                <input type="password" name="user_password" class="form-control" style="display: inherit;width: 200px;"  placeholder="请输入密码">
+                            </td>
+                        </tr>
+                        <tr height="50px">
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">验证码</label>
+                            </td>
+                            <td>
+                                <input type="text" name="user_code" class="form-control" style="display: inherit;width: 120px;"  placeholder="请输入验证码">
+                                <img src="/admin_createImage" id="codeImage"/> <a href="javascript:changeImage();">看不清</a>
+                            </td>
+                        </tr>
+                        <tr height="50px">
+                            <td align="center" width="80px" colspan="2">
+                                <span style="color: red" id="message"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
             </div>
             <div class="modal-footer" style="position:relative;height: 60px; line-height: 60px;">
                 <button style="position: absolute; left: 42%;" type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
-                <button  id="toLogin" style="position: absolute; left: 52%;" type="button" class="btn btn-success" data-dismiss="modal">登录</button>
+                <button  onclick="user_login();" style="position: absolute; left: 52%;" type="button" class="btn btn-success">登录</button>
                 <a style="position: absolute; right: 10%;line-height:50px;" data-dismiss="modal" data-toggle='modal' data-target='#register'>注册</a>
             </div>
         </div>
@@ -251,6 +271,7 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+
 <!-- 是否退出登录 -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -260,15 +281,16 @@
                 <h4 class="modal-title" id="myModalLabel" style="text-align: center;">是否退出登录</h4>
             </div>
             <div class="modal-footer" style="text-align: center;">
-                <button id="tui" type="button" class="btn btn-danger">退出登录</button>
+                <button id="tui" type="button" class="btn btn-danger" onclick="user_logout();">退出登录</button>
             </div>
         </div>
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
 </div>
+
 <!--注册模态框 -->
-<div class="modal fade" id="register" style="margin-top: 200px"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="register" style="margin-top: 200px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -276,66 +298,126 @@
                 <h4 class="modal-title" id="myModalLabel">用户注册</h4>
             </div>
             <div class="text-center" style="margin-top: 15px; text-align: center; margin-bottom: 15px;">
-                <table align="center" id="table2">
-                    <tr>
-                        <td align="center" width="80px">
-                            <label for="firstname" class="control-label">昵称</label>
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" style="display: inherit;width: 200px;" id="userName1" placeholder="请输入用户名">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" width="80px">
-                            <label for="firstname" class="control-label">用户名</label>
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" style="display: inherit;width: 200px;" id="account" placeholder="请输入账号">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" width="80px">
-                            <label for="firstname" class="control-label">密码</label>
-                        </td>
-                        <td>
-                            <input type="password" class="form-control" style="display: inherit;width: 200px;" id="userPassword2" placeholder="请输入密码">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" width="80px">
-                            <label for="firstname" class="control-label">确认密码</label>
-                        </td>
-                        <td>
-                            <input type="password" class="form-control" style="display: inherit;width: 200px;" id="userPassword3" placeholder="确认密码">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" width="80px">
-                            <label for="firstname" class="control-label">邮箱</label>
-                        </td>
-                        <td>
-                            <input type="email" class="form-control" style="display: inherit;width: 200px;" id="emli" placeholder="邮箱">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" width="80px">
-                            <label for="firstname" class="control-label">手机号</label>
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" style="display: inherit;width: 200px;" id="phone" placeholder="手机号">
-                        </td>
-                    </tr>
-                </table>
+                <form id="registerForm">
+                    <table align="center" id="table2">
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">昵称</label>
+                            </td>
+                            <td>
+                                <input type="text" name="user_name" class="form-control" style="display: inherit;width: 200px;" id="userName1" placeholder="请输入用户名">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">用户名</label>
+                            </td>
+                            <td>
+                                <input type="text" name="user_account" class="form-control" style="display: inherit;width: 200px;" id="account" placeholder="请输入账号">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">性别</label>
+                            </td>
+                            <td>
+                                <input type="radio" name="sex" value="1" checked>女
+                                <input type="radio" name="sex" value="2">男
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">密码</label>
+                            </td>
+                            <td>
+                                <input type="password" name="user_password" class="form-control" style="display: inherit;width: 200px;" id="userPassword2" placeholder="请输入密码">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">确认密码</label>
+                            </td>
+                            <td>
+                                <input type="password" class="form-control" style="display: inherit;width: 200px;" id="userPassword3" placeholder="确认密码">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">邮箱</label>
+                            </td>
+                            <td>
+                                <input type="email" name="user_emli"  class="form-control" style="display: inherit;width: 200px;" id="emli" placeholder="邮箱">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">手机号</label>
+                            </td>
+                            <td>
+                                <input type="text" name="user_phone" class="form-control" style="display: inherit;width: 200px;" id="phone" placeholder="手机号">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
             </div>
             <div class="modal-footer" style="position:relative;height: 60px; line-height: 60px;">
                 <button style="position: absolute; left: 42%;" type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
-                <button style="position: absolute; left: 52%;" type="button" class="btn btn-success" id="but66">注册</button>
+                <button onclick="user_register();" style="position: absolute; left: 52%;" type="button" class="btn btn-success">注册</button>
             </div>
         </div>
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
 </div>
+
 </body>
 
 </html>
+
+<script type="text/javascript">
+
+    //用户注册
+    function user_register() {
+        var data=$("#registerForm").serialize();
+        alert(data);
+        $.post("/user_register",data,function (result) {
+            if(result.code=200){
+                alert("注册成功,欢迎您登录购票！");
+                window.location.reload();
+            }else{
+                alert("注册失败");
+            }
+        });
+    }
+
+    //看不清
+    function changeImage() {
+        $("#codeImage").prop("src","/admin_createImage?time="+new Date());
+    }
+
+    //用户登录
+    function user_login() {
+        var data=$("#loginForm").serialize();
+        //alert(data);
+        $.post("/user_login",data,function (result) {
+            //alert(JSON.stringify(result));
+            if(result.code==200){
+                alert("登录成功");
+                window.location.reload();
+            }else{
+                $("#message").text(result.msg);
+            }
+        },"json");
+    }
+
+    //用户退出
+    function user_logout() {
+        $.getJSON("/user_logout",function (result) {
+            if(result.code==200){
+                alert("退出成功");
+                window.location.reload();
+            }
+        });
+    }
+
+</script>

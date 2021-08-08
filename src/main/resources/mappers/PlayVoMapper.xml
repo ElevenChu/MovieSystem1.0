@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.movie.mapper.PlayVoMapper">
+
+
+    <select id="totalcount" resultType="int">
+        select count(*) from play
+    </select>
+
+    <select id="findPlayVo" resultType="com.movie.vo.PlayVo">
+        select play.*,room.room_name,film.film_name from play INNER JOIN film on play.film_id=film.film_id
+                                                              INNER JOIN room on play.room_id=room.room_id
+        order by play.play_id desc limit #{startPage},#{pageSize}
+    </select>
+
+    <insert id="addPlayVo">
+        insert into play values (null,#{play_time},#{film_id},#{room_id},#{money},now(),now(),0)
+    </insert>
+
+    <update id="changeState">
+        update play set is_delete=#{is_delete} where play_id=#{play_id}
+    </update>
+
+
+</mapper>

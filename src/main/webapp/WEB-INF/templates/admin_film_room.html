@@ -1,0 +1,255 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="../js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/npm.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"/>
+    <script src="../js/3.3.7bootstrap.min.js"></script>
+    <style type="text/css">
+        .container {
+            margin-top: 30px;
+            border: 1px solid #b3a6a6;
+            border-radius: 10px;
+        }
+
+        .tou {
+            background: whitesmoke;
+            height: 30px;
+            line-height: 30px;
+            text-indent: 2em;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            border-bottom: 1px solid #b3a6a6;
+        }
+
+        table {
+            text-align: center;
+            margin-top: 10px;
+            border-top: 1px solid #b3a6a6;
+        }
+
+        table th {
+            text-align: center;
+        }
+
+        button span {
+            color: red;
+        }
+
+        label {
+            line-height: 35px;
+        }
+
+        .form-group {
+            margin-left: 100px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container" style="padding: 0px;width: 80%">
+    <div class="tou"><span class="glyphicon glyphicon-align-justify"></span><span
+            style="font-weight: bold; margin-left: 6px;">操作信息管理</span></div>
+    <table class="table">
+        <caption><span id="sum" style="margin-left: 30px;">共9条</span></caption>
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>大厅</th>
+            <th>电影</th>
+            <th>售价</th>
+            <th>排期</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="table">
+
+        <tr th:each="r:${pageUtil.records}">
+            <td id="playId" th:text="${r.play_id}">1</td>
+            <td id="roomName" th:text="${r.room_name}">一号厅</td>
+            <td id="filmName" th:text="${r.film_name}">南方车站的聚会</td>
+            <td id="money" th:text="${r.money}">39.0</td>
+            <td id="playTime" th:text="${r.play_time}">2019-12-21 19:00:00.0</td>
+            <td>
+                <button th:onclick="|changeState(${r.play_id},this);|" type="button" class="btn btn-default" style="border:1px solid #ffb6a5;background-color:#FFB6A5"
+                        th:if="${r.is_delete==1}"><span>下档</span></button>
+                <button th:onclick="|changeState(${r.play_id},this);|" type="button" class="btn btn-default" style="border:1px solid red;background-color:#9DFF8B"
+                        th:if="${r.is_delete==0}"><span>上映</span></button>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+    <!--分页-->
+    <div id="fenye" class="panel-footer" style="text-align: center;">
+        <nav style="height: 35px;">
+            <ul class="pagination" style="margin-top:0px;">
+                <li id="Previous" th:if="${pageUtil.pageIndex>1}">
+                    <a aria-label="Previous" th:href='|/playvo_page?pageIndex=${pageUtil.pageIndex-1}|'>
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li th:each="num:${pageUtil.numbers}"><a
+                        th:style="${pageUtil.pageIndex==num}?'background-color:#2aabd2;font-weight: bold;':''"
+                        class='active data' th:href='|/playvo_page?pageIndex=${num}|' th:text="${num}">XXX</a></li>
+                <li id="li" th:if="${pageUtil.pageIndex<pageUtil.pageCount}">
+                    <a aria-label="Next" th:href='|/playvo_page?pageIndex=${pageUtil.pageIndex+1}|'>
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="clearfix"></div>
+    </div>
+    <div align="center" style="margin-bottom: 10px;padding-top: 10px; border-top: 1px solid #b3a6a6;">
+        <button id="but2" type="button" class="btn btn-success" data-toggle='modal' data-target='#add'
+                style=" width: 100px; height: 40px; line-height: 30px;">
+            <span class="glyphicon glyphicon-ok" style="margin-right: 6px; color:white; font-size: 16px;"></span>
+            <span style="color:white; font-weight: 800;font-size: 16px;">添加</span>
+        </button>
+    </div>
+    <!--添加弹出框 -->
+    <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <form id="addForm">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel" style="text-align: center;">添加新档期</h4>
+                    </div>
+                    <div class="text-center" style="margin-top: 15px; text-align: center;">
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-3 control-label">大厅</label>
+                            <select id="select_room" name="room_id" class="form-control"
+                                    style="margin-left: 0px; display: inherit;width: 230px;">
+                                <option value="0">请选择大厅</option>
+                            </select>
+                        </div>
+                        <div class="text-center" style="margin-top: 15px; text-align: center;">
+                            <div class="form-group">
+                                <label for="firstname" class="col-sm-3 control-label">电影分类</label>
+                                <select id="select_category" onchange="getFilms();" class="form-control" style="margin-left: 0px; display: inherit;width: 230px;" name="">
+                                    <option value="0">请选择分类</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="firstname" class="col-sm-3 control-label">电影</label>
+                                <select id="select_film" name="film_id" class="form-control"
+                                        style="margin-left: 0px; display: inherit;width: 230px;">
+                                    <option value="0">请选择电影</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="firstname" class="col-sm-3 control-label">售价</label>
+                                <div class="">
+                                    <input type="text" name="money" class="form-control"
+                                           style="margin-left: 0px; display: inherit;width: 230px;" id="money2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-3 control-label">排期时间</label>
+                            <div class="">
+                                <input type="datetime-local" name="play_time" class="form-control"
+                                       style="margin-left: 0px; display: inherit;width: 230px;" id="playTime2">
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="text-align: center;">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button id="but4" type="button" onclick="addPalyVo();" class="btn btn-danger" data-dismiss="modal">添加</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </form>
+    </div>
+</div>
+</body>
+
+</html>
+
+<script type="text/javascript">
+
+    //异步加载下拉框
+    $(function () {
+
+        //大厅下拉框
+        $.getJSON("/playvo_findRooms", function (result) {
+            //alert(JSON.stringify(result));
+            for (var i = 0; i < result.length; i++) {
+                $("#select_room").append("<option value='" + result[i].room_id + "'>" + result[i].room_name + "</option>");
+            }
+        })
+
+        //类别下拉框
+        $.getJSON("/playvo_findFilmsCategorys", function (result) {
+            //alert(JSON.stringify(result));
+            for (var i = 0; i < result.length; i++) {
+                $("#select_category").append("<option value='" + result[i].category_id + "'>" + result[i].film_category + "</option>");
+            }
+        })
+
+    });
+
+    //当用户触发类别下拉框的时候，自动执行
+    function getFilms() {
+        var category_id = $("#select_category").val();
+        //alert(category_id);
+        if(category_id==0){
+            $("#select_film").html("<option value='0'>请选择电影</option>");//把下拉框清空
+        }else{
+            $("#select_film").html("");//把下拉框清空
+            //加载电影下拉框
+            $.getJSON("/playvo_findFilmsByCategoryId",{"category_id":category_id},function (result) {
+                //alert(JSON.stringify(result));
+                for (var i = 0; i < result.length; i++) {
+                    $("#select_film").append("<option value='" + result[i].film_id + "'>" + result[i].film_name + "</option>");
+                }
+            })
+        }
+    }
+
+    //新增大厅数据
+    function addPalyVo() {
+        var data=$("#addForm").serialize();
+        alert(data);
+        $.post("/playvo_add",data,function (result) {
+            alert(JSON.stringify(result));
+            if(result.code==200){
+                alert("新增大厅成功！");
+                window.location.reload();
+            }else{
+                alert("新增大厅异常！")
+            }
+        },"json");
+    }
+
+    //上映或下档
+    function changeState(play_id,btn) {
+        var text=$(btn).find("span").text();
+        var is_delete=0;
+        if(text=="上映"){
+            is_delete=1;
+        }
+        if(confirm("确定要"+text+"吗?")){
+            $.getJSON("/play_changeState",{"play_id":play_id,"is_delete":is_delete},function (result) {
+                if(result.code==200){
+                    alert(text+"成功！");
+                    window.location.reload();
+                }else{
+                    alert(text+"异常！");
+                }
+            })
+        }
+    }
+
+</script>

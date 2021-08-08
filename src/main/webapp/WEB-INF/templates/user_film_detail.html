@@ -100,7 +100,7 @@
                 <p>片长：<font id="pianchang" ><span th:text="${filmVo.play_time}"></span>分钟</font></p>
                 <p>描述：<font id="pianchang" th:text="${filmVo.description}">XXX</font></p>
                 <strong>
-                    <a href="goupiao?filmId=${film.filmId}"><font class ="btn btn-danger glyphicon glyphicon-shopping-cart">购票 </font></a>
+                    <a th:href="|/buy_findRoomInfoByFilmId?film_id=${filmVo.film_id}"|><font class ="btn btn-danger glyphicon glyphicon-shopping-cart">购票 </font></a>
                 </strong>
             </div>
         </div>

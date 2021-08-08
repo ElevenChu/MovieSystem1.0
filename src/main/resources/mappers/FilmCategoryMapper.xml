@@ -9,8 +9,7 @@
     </select>
 
     <select id="getFilmCategorys" resultType="FilmCategory">
-        select * from film_category where is_delete=1 order by category_id desc
-        limit #{pageStart},#{pageSize}
+        select * from film_category where is_delete=1 order by category_id desc limit #{pageStart},#{pageSize}
     </select>
 
     <select id="findById" resultType="FilmCategory">

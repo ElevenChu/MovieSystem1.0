@@ -32,7 +32,7 @@ public class FilmVoController {
 
     @Autowired
     FilmCategoryService filmCategoryService;
-
+    @Autowired
     PerformerService performerService;
     @Autowired
     ScreenwriterService screenwriterService;
@@ -47,7 +47,7 @@ public class FilmVoController {
         //总数
         int totalCount = filmVoService.totalcount();
         Map<String,Object> map=new HashMap<>();
-        map.put("startPage",(pageIndex-1)*pageSize);
+        map.put("pageStart",(pageIndex-1)*pageSize);
         map.put("pageSize",pageSize);
         //每页数据
         List<FilmVo> filmCategorys = filmVoService.findFilmsVo(map);

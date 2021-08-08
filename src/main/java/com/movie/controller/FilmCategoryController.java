@@ -1,4 +1,4 @@
-package com.movie.web;
+package com.movie.controller;
 
 import com.movie.bean.FilmCategory;
 import com.movie.service.FilmCategoryService;
@@ -16,12 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @BelongsProject: MovieSystem
- * @BelongsPackage: com.movie.web
- * @CreateTime: 2020-10-15 11:22
- * @Description: TODO
- */
+
 @Controller
 public class FilmCategoryController {
 
@@ -101,7 +96,7 @@ public class FilmCategoryController {
         //总数
         int totalCount = filmCategoryService.totalCount();
         Map<String,Object> map=new HashMap<>();
-        map.put("startPage",(pageIndex-1)*pageSize);
+        map.put("pageStart",(pageIndex-1)*pageSize);
         map.put("pageSize",pageSize);
         //每页数据
         List<FilmCategory> filmCategorys = filmCategoryService.getFilmCategorys(map);

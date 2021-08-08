@@ -16,7 +16,7 @@
                                                                                                                                                                                                     INNER JOIN screenwriter on screenwriter_film.screenwriter_id=screenwriter.screenwriter_id
                                                                                                                                                                                                     INNER JOIN star on film.film_id=star.film_id
                                                                                                                                                                                                     INNER JOIN performer on star.performer_id=performer.performer_id
-        order by film.film_id desc limit #{startPage},#{pageSize}
+        order by film.film_id desc limit #{pageStart},#{pageSize}
     </select>
 
     <select id="findFilmVoById" resultType="com.movie.vo.FilmVo">

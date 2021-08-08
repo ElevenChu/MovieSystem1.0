@@ -1,4 +1,4 @@
-package com.movie.controller;
+package com.movie.web;
 
 import com.movie.bean.Film;
 import com.movie.bean.FilmCategory;
@@ -7,10 +7,11 @@ import com.movie.service.FilmCategoryService;
 import com.movie.service.FilmService;
 import com.movie.service.PlayVoService;
 import com.movie.service.RoomService;
+import com.movie.utils.CommonResult;
 import com.movie.utils.PageUtil;
+import com.movie.vo.FilmVo;
 import com.movie.vo.PlayVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 @Controller
 public class PlayVoController {
@@ -35,6 +37,7 @@ public class PlayVoController {
 
     @Autowired
     FilmCategoryService filmCategoryService;
+
     /**
      * 下拉框绑定1
      * @return
@@ -64,6 +67,7 @@ public class PlayVoController {
     public List<Film> findFilmsByCategoryId(Integer category_id){
         return filmService.findFilmsByFilmCategory(category_id);
     }
+
     /**
      * 01-数据分页
      * @return
@@ -83,5 +87,50 @@ public class PlayVoController {
         //存值
         model.addAttribute("pageUtil",pageUtil);
         return "admin_film_room";
+    }
+
+    /**
+     * 新增大厅
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/playvo_add")
+    public CommonResult add(PlayVo playVo){
+        CommonResult result;
+        try {
+            System.out.println("要新增的对象是："+playVo);
+            int count = playVoService.addPlayVo(playVo);
+            if(count>0){
+                result=new CommonResult(200,"大厅添加成功");
+            }else{
+                result=new CommonResult(500,"大厅添加失败");
+            }
+        } catch (Exception e) {
+            result=new CommonResult(500,"大厅添加失败");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 上映或下档
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/play_changeState")
+    public CommonResult play_changeState(Integer play_id,Integer is_delete){
+        CommonResult result;
+        try {
+            int count = playVoService.changeState(play_id,is_delete);
+            if(count>0){
+                result=new CommonResult(200,"操作成功");
+            }else{
+                result=new CommonResult(500,"操作失败");
+            }
+        } catch (Exception e) {
+            result=new CommonResult(500,"操作失败");
+            e.printStackTrace();
+        }
+        return result;
     }
 }

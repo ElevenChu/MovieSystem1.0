@@ -5,24 +5,30 @@
 <mapper namespace="com.movie.mapper.FilmMapper">
 
     <select id="findLatestFilms" resultType="Film">
-        select * from film where is_delete=1 order by film_time desc limit 0,#{count}
+        select DISTINCT film.* from film INNER JOIN play on film.film_id=play.film_id
+        where film.is_delete=1 and play.is_delete=1 order by film_time desc limit 0,#{count}
     </select>
 
     <select id="findFilmsByFilmCategory" resultType="Film">
-        select film.* from film INNER JOIN film_and_type ON film.film_id=film_and_type.film_id
-                                INNER JOIN film_category on film_and_type.category_id=film_category.category_id
+        select DISTINCT film.* from film INNER JOIN film_and_type ON film.film_id=film_and_type.film_id
+                                         INNER JOIN film_category on film_and_type.category_id=film_category.category_id
+                                         INNER JOIN play on film.film_id=play.film_id and play.is_delete=1
             and film.is_delete=1 and film_category.category_id=#{category_id} ORDER BY film.film_time desc LIMIT 0,8
     </select>
 
     <select id="totalcount" resultType="int">
-        select count(*) from film where is_delete=1
+        select COUNT(DISTINCT(film.film_id)) from film
+        INNER JOIN play on film.film_id=play.film_id
+        where film.is_delete=1 and play.is_delete=1
         <if test="film_name!=null and film_name!=''">
             and film_name like '%${film_name}%'
         </if>
     </select>
 
     <select id="findFilms" resultType="Film">
-        select * from film where is_delete=1
+        select DISTINCT film.* from film
+        INNER JOIN play on film.film_id=play.film_id
+        where film.is_delete=1 and play.is_delete=1
         <if test="film_name!=null and film_name!=''">
             and film_name like '%${film_name}%'
         </if>

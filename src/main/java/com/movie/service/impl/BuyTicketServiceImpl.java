@@ -16,4 +16,13 @@ public class BuyTicketServiceImpl implements BuyTicketService {
 
         return buyTicketMapper.findRoomInfoByFilmId(film_id);
     }
+    @Override
+    public List<String> findSelledSeatByPlayId(Integer play_id) {
+        return buyTicketMapper.findSelledSeatByPlayId(play_id);
+    }
+
+    @Override
+    public PlayVo findPlayVoById(Integer play_id) {
+        return buyTicketMapper.findPlayVoById(play_id);
+    }
 }

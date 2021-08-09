@@ -8,6 +8,8 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="/css/toubu.css"/>
 <link href="/css/style.css" type="text/css" rel="stylesheet" media="all">
+<!--引入二维码JS-->
+<script src="/js/qrious.min.js"></script>
 <script type="text/javascript">
     setInterval(function() {
         //时间
@@ -73,64 +75,17 @@
 <div style="margin: 30px;">
 </div>
 <div class="container detailed">
-    <strong style="font-size: 30px; margin:20px; display: block;">个人中心</strong>
+    <strong style="font-size: 30px; margin:20px; display: block;">支付中心</strong>
 
     <div class="container" style="margin: 30px;line-height: 30px;font-size: 18px; position: relative;">
-        <strong>昵称:<span id="userName3" th:text="${session.loginUser.user_name}">XXXX</span></strong><br>
-        <strong>性别:<span id="sex3" th:text="${session.loginUser.sex==1?'女':'男'}"></span></strong><br>
-        <strong>手机:<span id="userPhone3" th:text="${session.loginUser.user_phone}">XXX</span></strong><br>
-        <strong>邮箱:<span id="userEmli3" th:text="${session.loginUser.user_emli}">XXX</span></strong><br>
-        <img data-toggle='modal' data-target='#upimg' th:src="${session.loginUser.img_url}" style="width: 180px;height: 180px;position: absolute ;right:15%;top:-45%;float: right">
-        <a data-toggle='modal' data-target='#userUp' style="font-size: 15px">修改用户信息</a>&nbsp;&nbsp;
-    </div>
-    <div class="container" style="margin-left: 30px;margin-top: 40px;">
-        <table class="table table-striped" style="width: 80%">
-            <thead>
-            <tr>
-                <th>单号</th>
-                <th>电影</th>
-                <th>大厅</th>
-                <th>座位</th>
-                <th>票价</th>
-                <th>播放时间</th>
-                <th>购票时间</th>
-            </tr>
-            </thead>
-            <tbody id="table3">
-            <tr th:each="ticket:${myTickets}">
-                <td id="ticketId" th:text="${ticket.order_id}">XXX</td>
-                <td id="filmName" th:text="${ticket.film_name}">XXX</td>
-                <td id="roomName" th:text="${ticket.room_name}">${ticket.play.room.roomName}</td>
-                <td id="seat" th:text="${ticket.seat}">XXX</td>
-                <td id="money" th:text="${ticket.money}">XXX</td>
-                <td  th:text="${ticket.play_time}">XXX</td>
-                <td  th:text="${ticket.buying_time}">XXX</td>
-            </tr>
-            <tr style="height: 35px">
-                <td colspan="6" style="padding: 0px;">
-                    <!--分页-->
-                    <div id="fenye" class="panel-footer" style="text-align: center;padding: 0px; display: none">
-                        <nav style="height: 35px;">
-                            <ul class="pagination" style="margin-top:0px;">
-                                <li id="Previous">
-                                    <a aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-
-                                <li id="li">
-                                    <a aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <div class="clearfix"></div>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <strong>支付订单号：<span  th:text="${orderId}">XXXX</span></strong><br>
+        <strong>电影名：<span id="userName3" th:text="${vo.film_name}">XXXX</span></strong><br>
+        <strong>放映时间：<span id="sex3" th:text="${vo.play_time}"></span></strong><br>
+        <strong>放映大厅：<span id="userPhone3" th:text="${vo.room_name}">XXX</span></strong><br>
+        <strong>购买座位：<span id="userEmli3" th:text="${seats}">XXX</span></strong><br>
+        <strong>待支付金额：<span id="userMoney" th:text="|￥${sumMoney}元|">XXX</span></strong><br>
+        <img  id="qrious"/>
+        <img  src="/img/phone-bg.png" />
     </div>
 </div>
 <!--用户修改模态框 -->
@@ -417,7 +372,7 @@
         $.getJSON("/user_logout",function (result) {
             if(result.code==200){
                 alert("退出成功");
-                window.location.href="/index";
+                window.location.reload();
             }
         });
     }
@@ -436,5 +391,31 @@
             }
         },"json");
     }
+
+    //生成一个二维码
+    var qr = new QRious({
+        element:document.getElementById('qrious'),
+        size:300, // 二维码的尺寸，单位像素。
+        level:'H', // 二维码的误差校正级别(L, M, Q, H)  30%
+        value:'[[${code_url}]]'  // 需要编码为二维码的值 二维码的信息
+    });
+
+
+    //调用订单状态查询接口，查询订单支付状态
+    $(function () {
+        $.post("/pay_queryPayStatus",{"out_trade_no":'[[${orderId}]]',"play_id":[[${vo.play_id}]],},function (result) {
+            //alert(JSON.stringify(result));
+            if(result.code==200){
+                //alert("支付成功!");
+                window.location.href="/page_user_pay_success";
+            }else if(result.code==502){
+                alert("二维码超时，刷新后继续支付！");
+                window.location.reload();
+            }else{
+                window.location.href="/page_user_pay_fail";
+            }
+        },"json");
+    });
+
 
 </script>

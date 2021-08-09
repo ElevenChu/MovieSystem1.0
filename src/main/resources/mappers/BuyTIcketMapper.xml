@@ -10,4 +10,17 @@
         WHERE film.film_id=#{film_id}
     </select>
 
+    <select id="findPlayVoById" resultType="com.movie.vo.PlayVo">
+        select film.film_name,room.room_name,play.* from film INNER JOIN play on film.film_id=play.film_id
+                                                              INNER JOIN room on play.room_id=room.room_id
+        WHERE play.play_id=#{play_id}
+    </select>
+
+    <select id="findSelledSeatByPlayId" resultType="String">
+        select seat.seat from play INNER JOIN ticket
+                                              on play.play_id=ticket.play_id
+                                   INNER JOIN seat on ticket.seat_id=seat.seat_id
+        where play.play_id=#{play_id}
+    </select>
+
 </mapper>

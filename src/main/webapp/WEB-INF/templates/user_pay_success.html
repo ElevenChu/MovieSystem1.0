@@ -1,0 +1,387 @@
+<html xmlns:th="http://www.thymeleaf.org">>
+<head>
+    <title>支付成功</title>
+</head>
+<script src="/js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/toubu.css"/>
+<link href="/css/style.css" type="text/css" rel="stylesheet" media="all">
+<script type="text/javascript">
+    setInterval(function() {
+        //时间
+        var mydate = new Date();
+        var year = mydate.getFullYear()
+        var month = mydate.getMonth() + 1;
+        var data = mydate.getDate();
+        var h = mydate.getHours(); //获取当前小时数(0-23)
+        var m = mydate.getMinutes(); //获取当前分钟数(0-59)
+        var s = mydate.getSeconds(); //获取当前秒数(0-59)
+        var cg = year + "/" + month + "/" + data + "     " + h + ":" + m + ":" + s;
+        $("#time").html(cg)
+
+    }, 1)
+</script>
+<body>
+<div class="container">
+    <div class="row" id="tou">
+        <nav class="navbar navbar-default col-lg-12" style="text-align: center;">
+            <div class="logo navbar-header" style="width: 90px; height: 51px; padding: 8px;">
+                <a href=""><img src="/img/logo.png" style="width: 88px;" height="50.59px" alt="" /></a>
+            </div>
+            <div class="container-fluid" style="margin-left: 120px; padding: 10px; margin: 0px;">
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul id="ul" class="nav navbar-nav" style="margin-left: 20px;">
+                        <li>
+                            <a href="/index">首页</a>
+                        </li>
+                        <li>
+                            <a href="/searchFilm">全部电影</a>
+                        </li>
+                        <li>
+                            <a href="we">影城介绍</a>
+                        </li>
+                    </ul>
+                    <div class="navbar-nav container-fluid" style="position: relative;">
+                        <div style="margin-left:30px;display: block;">
+                            <input id="search" type="search" placeholder="搜索">
+                            <span id="but1" class="glyphicon glyphicon-search"></span>
+                            <font id="time">#</font>
+                        </div>
+
+                    </div>
+
+                    <div style="float: right;" id="islog">
+
+                        <span th:if="${session.loginUser==null}">
+                            <script>alert("用户未登录！");location.href="/index";</script>
+                        </span>
+
+                        <a th:if="${session.loginUser!=null}" href="personal"><img  th:src="${session.loginUser.img_url}" class="img-circle" style="width: 40px; margin-right: 10px; height: 40px"></a>
+                        <a th:if="${session.loginUser!=null}" href="personal" th:text="${session.loginUser.user_name}">fuckyou!</a>&nbsp;&nbsp;&nbsp;
+                        <button th:if="${session.loginUser!=null}" class="btn btn-danger" data-toggle="modal" data-target="#myModal" style="margin-left: 20px;"><span class=" glyphicon glyphicon-off" style="font-size: 14px; margin-right: 5px;"></span><span >退出</span></button>
+
+                        <img th:if="${session.loginUser==null}" data-toggle='modal' data-target='#login' id="img" src="/img/ht.jpg" class="img-circle" style="width: 40px; margin-right: 10px; height: 40px">
+                        <a   th:if="${session.loginUser==null}" data-toggle='modal' data-target='#login'>登录</a>&nbsp;
+                        &nbsp;&nbsp;
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+<div style="margin: 30px;">
+</div>
+<div class="container detailed">
+    <strong style="font-size: 30px; margin:20px; display: block;"><img  src="/img/right.png" style="width: 50px"/> 微信支付成功 </strong>
+    <div class="container" style="margin: 30px;line-height: 30px;font-size: 18px; position: relative;">
+        <strong><a href="/user_topersonal">查看订单</a><br>
+            <strong><a href="/index">继续购票</a><br>
+    </div>
+</div>
+<!--用户修改模态框 -->
+<div class="modal fade" id="userUp" style="margin-top: 200px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">用户信息修改</h4>
+            </div>
+            <div class="text-center" style="margin-top: 15px; text-align: center; margin-bottom: 15px;">
+                <form id="userInfoForm">
+                    <table align="center">
+                        <tr>
+                            <td align="center" width="80px">
+                                <label  class="control-label">昵称</label>
+                            </td>
+                            <td>
+                                <input type="text" value="pual123" name="user_name" class="form-control" style="display: inherit;width: 200px;" id="userName4" placeholder="修改昵称">
+                                <input type="hidden" name="user_id" value="21"/>
+                            </td>
+                        </tr>
+                        <tr height="50px">
+                            <td align="center" width="80px">
+                                <label  class="control-label">性别</label>
+                            </td>
+                            <td>
+                                <select id="select" class="form-control" name="sex">
+                                    <option value="2" selected="selected">男</option>
+                                    <option value="1">女</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr height="50px">
+                            <td align="center" width="80px">
+                                <label  class="control-label">手机</label>
+                            </td>
+                            <td>
+                                <input type="text" value="13378191010" name="user_phone" class="form-control" style="display: inherit;width: 200px;" id="userPhone4" placeholder="修改手机">
+                            </td>
+                        </tr>
+                        <tr height="20px">
+                            <td align="center" width="80px">
+                                <label  class="control-label">邮箱</label>
+                            </td>
+                            <td>
+                                <input type="text" value="pual123@163.com" name="user_emli" class="form-control" style="display: inherit;width: 200px;" id="userEmli4" placeholder="修改邮箱">
+                            </td>
+                        </tr>
+                        <tr height="20px">
+                            <td align="center" width="80px" colspan="2">
+                                <span style="color: red" id="message_update_info"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer" style="position:relative;height: 60px; line-height: 60px;">
+                <button style="position: absolute; left: 42%;" type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+                <button  id="toUp" onclick="updateUserInfo();" style="position: absolute; left: 52%;" type="button" class="btn btn-success">确认修改</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<!--登录模态框 -->
+<div class="modal fade" id="login" style="margin-top: 200px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">用户登录</h4>
+            </div>
+            <div class="text-center" style="margin-top: 15px; text-align: center; margin-bottom: 15px;">
+                <form id="loginForm">
+                    <table align="center" id="table">
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">用户名</label>
+                            </td>
+                            <td>
+                                <input type="text" name="user_account" class="form-control" style="display: inherit;width: 200px;" id="userName" placeholder="请输入用户名">
+                            </td>
+                        </tr>
+                        <tr height="50px">
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">密码</label>
+                            </td>
+                            <td>
+                                <input type="password" name="user_password" class="form-control" style="display: inherit;width: 200px;"  placeholder="请输入密码">
+                            </td>
+                        </tr>
+                        <tr height="50px">
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">验证码</label>
+                            </td>
+                            <td>
+                                <input type="text" name="user_code" class="form-control" style="display: inherit;width: 120px;"  placeholder="请输入验证码">
+                                <img src="/admin_createImage" id="codeImage"/> <a href="javascript:changeImage();">看不清</a>
+                            </td>
+                        </tr>
+                        <tr height="50px">
+                            <td align="center" width="80px" colspan="2">
+                                <span style="color: red" id="message"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer" style="position:relative;height: 60px; line-height: 60px;">
+                <button style="position: absolute; left: 42%;" type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+                <button  onclick="user_login();" style="position: absolute; left: 52%;" type="button" class="btn btn-success">登录</button>
+                <a style="position: absolute; right: 10%;line-height:50px;" data-dismiss="modal" data-toggle='modal' data-target='#register'>注册</a>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<!-- 是否退出登录 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel" style="text-align: center;">是否退出登录</h4>
+            </div>
+            <div class="modal-footer" style="text-align: center;">
+                <button id="tui" type="button" class="btn btn-danger" onclick="user_logout();">退出登录</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<!--注册模态框 -->
+<div class="modal fade" id="register" style="margin-top: 200px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">用户注册</h4>
+            </div>
+            <div class="text-center" style="margin-top: 15px; text-align: center; margin-bottom: 15px;">
+                <form id="registerForm">
+                    <table align="center" id="table2">
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">昵称</label>
+                            </td>
+                            <td>
+                                <input type="text" name="user_name" class="form-control" style="display: inherit;width: 200px;" id="userName1" placeholder="请输入用户名">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">用户名</label>
+                            </td>
+                            <td>
+                                <input type="text" name="user_account" class="form-control" style="display: inherit;width: 200px;" id="account" placeholder="请输入账号">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">性别</label>
+                            </td>
+                            <td>
+                                <input type="radio" name="sex" value="1" checked>女
+                                <input type="radio" name="sex" value="2">男
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">密码</label>
+                            </td>
+                            <td>
+                                <input type="password" name="user_password" class="form-control" style="display: inherit;width: 200px;" id="userPassword2" placeholder="请输入密码">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">确认密码</label>
+                            </td>
+                            <td>
+                                <input type="password" class="form-control" style="display: inherit;width: 200px;" id="userPassword3" placeholder="确认密码">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">邮箱</label>
+                            </td>
+                            <td>
+                                <input type="email" name="user_emli"  class="form-control" style="display: inherit;width: 200px;" id="emli" placeholder="邮箱">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" width="80px">
+                                <label for="firstname" class="control-label">手机号</label>
+                            </td>
+                            <td>
+                                <input type="text" name="user_phone" class="form-control" style="display: inherit;width: 200px;" id="phone" placeholder="手机号">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer" style="position:relative;height: 60px; line-height: 60px;">
+                <button style="position: absolute; left: 42%;" type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+                <button onclick="user_register();" style="position: absolute; left: 52%;" type="button" class="btn btn-success">注册</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+<!-- 修改头像 -->
+<div class="modal fade" id="upimg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel" style="text-align: center;">跟换图片</h4>
+            </div>
+            <div class="text-center" style="margin-top: 15px; text-align: center; margin-bottom: 15px;">
+                <form action="/user_updatePhoto" method="post" enctype="multipart/form-data">
+                    <input type="file" style="margin-left: 30%" id="file" name="file">
+                    <input type="submit" class="btn btn-success" value="跟换">
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+</body>
+</html>
+
+<script type="text/javascript">
+
+    //用户注册
+    function user_register() {
+        var data=$("#registerForm").serialize();
+        alert(data);
+        $.post("/user_register",data,function (result) {
+            if(result.code=200){
+                alert("注册成功,欢迎您登录购票！");
+                window.location.reload();
+            }else{
+                alert("注册失败");
+            }
+        });
+    }
+
+    //看不清
+    function changeImage() {
+        $("#codeImage").prop("src","/admin_createImage?time="+new Date());
+    }
+
+    //用户登录
+    function user_login() {
+        var data=$("#loginForm").serialize();
+        //alert(data);
+        $.post("/user_login",data,function (result) {
+            //alert(JSON.stringify(result));
+            if(result.code==200){
+                alert("登录成功");
+                window.location.reload();
+            }else{
+                $("#message").text(result.msg);
+            }
+        },"json");
+    }
+
+    //用户退出
+    function user_logout() {
+        $.getJSON("/user_logout",function (result) {
+            if(result.code==200){
+                alert("退出成功");
+                window.location.reload();
+            }
+        });
+    }
+
+    //修改个人信息
+    function updateUserInfo() {
+        var data=$("#userInfoForm").serialize();
+        //alert(data);
+        $.post("/user_updateInfomation",data,function (result) {
+            //alert(JSON.stringify(result));
+            if(result.code==200){
+                alert("个人信息修改成功！");
+                window.location.reload();
+            }else{
+                $("#message_update_info").text(result.msg);
+            }
+        },"json");
+    }
+
+</script>

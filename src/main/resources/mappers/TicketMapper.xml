@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.movie.mapper.TicketMapper">
+
+    <select id="getSeatIdBySeatName" resultType="int">
+        select seat_id from seat where seat=#{seatName}
+    </select>
+
+    <insert id="addTicket">
+        insert  into ticket values (null,#{order_id},#{play_id},#{user_id},#{seat_id},now())
+    </insert>
+
+    <select id="findMyTickets" resultType="com.movie.vo.TicketVo">
+        select room.room_name,ticket.order_id,film.film_name,seat.seat,play.money,play.play_time,ticket.buying_time from film INNER JOIN play on film.film_id=play.film_id
+                                                                                                                              INNER JOIN room on play.room_id=room.room_id
+                                                                                                                              INNER JOIN ticket on play.play_id=ticket.play_id
+                                                                                                                              INNER JOIN seat on ticket.seat_id=seat.seat_id where ticket.user_id=#{user_id} order by ticket.buying_time desc
+    </select>
+
+</mapper>

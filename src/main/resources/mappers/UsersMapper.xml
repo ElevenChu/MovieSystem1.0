@@ -11,7 +11,7 @@
 
     <insert id="user_register">
         insert  into users values (null,#{user_name},#{user_account},#{user_password},#{sex},
-                                   #{user_emli},#{user_phone},null,now(),null,null,1)
+                                   #{user_emli},#{user_phone},'/img/ht.jpg',now(),null,null,1)
     </insert>
 
     <update id="user_updateInfomation">

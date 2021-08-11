@@ -6,6 +6,8 @@ import com.movie.bean.Users;
 import com.movie.service.TicketService;
 import com.movie.service.UsersService;
 import com.movie.utils.CommonResult;
+import com.movie.utils.MD5Utils;
+import com.movie.vo.SaltVo;
 import com.movie.vo.TicketVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,9 @@ public class UsersController {
     @Autowired
     TicketService ticketService;
 
+    @Autowired
+    SaltVo saltVo;
+
     /**
      * 01-异步请求登录接口 必须以post请求
      * @return
@@ -44,6 +49,8 @@ public class UsersController {
         CommonResult result=null;
         String safeCode=(String) session.getAttribute("safeCode"); //系统验证码
         if(safeCode.equalsIgnoreCase(user_code)){
+            String newPassword = MD5Utils.string2MD5(saltVo.getSalt() + users.getUser_password());
+            users.setUser_password(newPassword);
             Users loginUser = usersService.user_login(users);
             if(loginUser!=null){
                 result=new CommonResult(200,"登录成功！");
@@ -59,7 +66,7 @@ public class UsersController {
     }
 
     /**
-     * 注册
+     * 前台用户注册
      */
     @ResponseBody
     @RequestMapping(value = "/user_register",method = RequestMethod.POST)
@@ -67,7 +74,11 @@ public class UsersController {
         System.out.println("要注册的对象是:"+users);
         CommonResult result;
         //用户默认头像
-        users.setImg_url("/photo/defaultPhoto.jpg");
+        users.setImg_url("/img/ht.jpg");
+        System.out.println("加盐之后:"+saltVo.getSalt() + users.getUser_password());
+        String newPassword = MD5Utils.string2MD5(saltVo.getSalt() + users.getUser_password());
+        System.out.println("密文:"+newPassword);
+        users.setUser_password(newPassword);
         int count = usersService.user_registry(users);
         if(count>0){
             result=new CommonResult(200,"用户注册成功");

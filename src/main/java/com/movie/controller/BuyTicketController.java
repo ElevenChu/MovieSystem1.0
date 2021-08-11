@@ -1,4 +1,4 @@
-package com.movie.web;
+package com.movie.controller;
 
 import com.movie.bean.Users;
 import com.movie.service.BuyTicketService;

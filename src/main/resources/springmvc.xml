@@ -47,4 +47,35 @@
         <property name="maxUploadSize" value="5242880"/>
     </bean>
 
+    <!--配置SpringMVC的拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!--需要拦截哪些路径-->
+            <mvc:mapping path="/**"/>
+            <!--不需要拦截哪些资源 静态资源-->
+            <mvc:exclude-mapping path="/css/**"/>
+            <mvc:exclude-mapping path="/img/**"/>
+            <mvc:exclude-mapping path="/js/**"/>
+            <mvc:exclude-mapping path="/photo/**"/>
+            <mvc:exclude-mapping path="/fonts/**"/>
+            <!--验证码不拦截-->
+            <mvc:exclude-mapping path="/admin_createImage"/>
+            <mvc:exclude-mapping path="/user_login"/>
+            <mvc:exclude-mapping path="/user_register"/>
+            <mvc:exclude-mapping path="/user_logout"/>
+            <mvc:exclude-mapping path="/"/>
+            <mvc:exclude-mapping path="/index"/>
+            <mvc:exclude-mapping path="/favicon.ico"/>
+            <mvc:exclude-mapping path="/film_findFilmVoById"/>
+            <mvc:exclude-mapping path="/searchFilm"/>
+            <mvc:exclude-mapping path="/cinema_Introduce"/>
+
+            <mvc:exclude-mapping path="/admin"/>
+            <mvc:exclude-mapping path="/admin_login"/>
+
+            <!--自定义的拦截器-->
+            <bean class="com.movie.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
 </beans>

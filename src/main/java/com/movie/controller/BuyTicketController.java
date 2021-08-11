@@ -18,12 +18,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @BelongsProject: MovieSystem
- * @BelongsPackage: com.movie.web
- * @CreateTime: 2020-10-22 17:37
- * @Description: TODO
- */
+
 @Controller
 public class BuyTicketController {
 

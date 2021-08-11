@@ -1,10 +1,15 @@
 package com.movie.controller;
 
+import com.movie.bean.Admin;
+import com.movie.bean.FilmCategory;
 import com.movie.bean.Users;
+import com.movie.service.TicketService;
 import com.movie.service.UsersService;
 import com.movie.utils.CommonResult;
+import com.movie.vo.TicketVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,12 +20,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
+
 
 @Controller
 public class UsersController {
+
     @Autowired
     UsersService usersService;
+
+    @Autowired
+    TicketService ticketService;
 
     /**
      * 01-异步请求登录接口 必须以post请求
@@ -49,7 +60,6 @@ public class UsersController {
 
     /**
      * 注册
-     * user_registry与user_register注意
      */
     @ResponseBody
     @RequestMapping(value = "/user_register",method = RequestMethod.POST)
@@ -66,15 +76,35 @@ public class UsersController {
         }
         return result;
     }
+
+
+    //退出
+    /**
+     * 退出
+     * @return
+     */
+    @ResponseBody //把返回值自动转为JSON格式！
+    @RequestMapping(value ="/user_logout")
+    public CommonResult logout(HttpSession session){
+        session.invalidate();
+        CommonResult result=new CommonResult(200,"注销成功！");
+        return result;
+    }
+
     /**
      * 跳转个人中心
      * @return
      */
     @RequestMapping("/user_topersonal")
-    public String user_topersonal(){
+    public String user_topersonal(HttpSession session, Model model){
         System.out.println("查询数据....");
+        Users loginUser=(Users) session.getAttribute("loginUser");
+        List<TicketVo> myTickets = ticketService.findMyTickets(loginUser.getUser_id());
+        model.addAttribute("myTickets",myTickets);
         return "user_personal";
     }
+
+
     /**
      * 异步更新信息
      * @param users
@@ -101,7 +131,7 @@ public class UsersController {
      * 修改头像
      */
     @RequestMapping("/user_updatePhoto")
-    public void user_updatePhoto(MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public void user_updatePhoto(MultipartFile file, HttpServletRequest request,HttpServletResponse response) throws Exception{
         response.setContentType("text/html;charset=utf-8");
         try {
             //要上传的原始的文件名

@@ -12,4 +12,4 @@
 ![image](https://user-images.githubusercontent.com/57619422/129155944-08363b58-f5f4-4041-a537-b5c619fd8914.png)
 ![image](https://user-images.githubusercontent.com/57619422/129155997-82e724a6-0149-4ff9-a958-77290a8b3b3f.png)
 ![image](https://user-images.githubusercontent.com/57619422/129156078-36884617-0753-4bb5-a5ed-59c8410533f0.png)
-
+后续功能会逐渐完善，这个项目1.0版本暂时终止。
